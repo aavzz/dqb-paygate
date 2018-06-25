@@ -30,14 +30,47 @@ func (s *postgres) init() error {
 }
 
 //StorePayment stores payment in local database and checks if it has really been stored
-func (s *postgres) StorePayment(pid,cid,channel,terminal string, sum float32) error {
+func (s *postgres) StorePayment(pid,cid,channel,terminal string, sum float32) *Payment {
 
-        if _, err := s.dbh.Exec("INSERT INTO payments(channel_payment_id, paymant_sum, payment_subject_id, payment_channel, channel_terminal_id, tstamp_paygate) VALUES ($1, $2, $3, $4, $5, current_timestamp)",
-                                  pid, sum, cid, channel, terminal); err != nil {
-            return err
+        var p Payment
+
+	//check if the payment already exists
+        rows, err := s.dbh.Query("SELECT id, tstamp_paygate FROM payments WHERE payment_channel=$1 AND channel_payment_id=$2", channel, pid)
+        if err != nil {
+		log.Error("Postgres: " + err.Error())
+                return nil
         }
-        return nil
+        defer rows.Close()
+        if !rows.Next() {
+	        if _, err := s.dbh.Exec("INSERT INTO payments(channel_payment_id, paymant_sum, payment_subject_id, payment_channel, channel_terminal_id) VALUES ($1, $2, $3, $4, $5)",
+                                  pid, sum, cid, channel, terminal); err != nil {
+			log.Error("Postgres: " + err.Error())
+			return nil
+        	}
 
+		rows1, err := s.dbh.Query("SELECT id,tstamp_paygate FROM payments WHERE payment_channel=$1 AND channel_payment_id=$2", channel, pid)
+		if err != nil {
+			log.Error("Postgres: " + err.Error())
+			return nil
+		}
+		defer rows1.Close()
+		if !rows1.Next() {
+			log.Error("Postgres: Cannot find inserted payment " + channel + " " + pid)
+			return nil
+		}
+        	if err := rows1.Scan(&p.Number,&p.Time); err != nil {
+			log.Error("Postgres: " + err.Error())
+            		return nil
+        	}
+		return &p
+        }
+        if err := rows.Scan(&p.Number,&p.Time); err != nil {
+		log.Error("Postgres: " + err.Error())
+            return nil
+        }
+
+	log.Info("Postgres: Incoming payment has already been saved: " + channel + " " + pid)
+        return &p;
 }
 
 //GetUnhandledBilling gets unprocessed db records

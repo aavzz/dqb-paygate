@@ -6,7 +6,7 @@ import (
 
 type storage interface {
         init() error
-	StorePayment(pid,cid,channel,terminal string, sum float32) error
+	StorePayment(pid,cid,channel,terminal string, sum float32) *Payment
 	GetUnhandledBilling() (map[uint64]Unhandled, error)
 	GetUnhandledOfd() (map[uint64]Unhandled, error)
 	SetHandledBilling(id uint64) error
@@ -17,6 +17,11 @@ type storage interface {
 type Unhandled struct {
         Cid,Payment_id,Channel,Type string
         Sum float32
+}
+
+type Payment struct {
+	Number uint64
+	Time string
 }
 
 var Storage storage

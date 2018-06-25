@@ -44,12 +44,6 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 	sumFloat := float32(value)
 
         switch cmd {
-        case "get_info":
-                if _, err := billing.Billing.GetUserInfo(userId); err == nil {
-                    w.Write([]byte("status=0"))
-                } else {
-                    w.Write([]byte("status=-1"))
-                }
         case "payment":
                 if err := storage.Storage.StorePayment(payId, userId, "operator", terminal, sumFloat); err == nil {
                     w.Write([]byte("status=0"))

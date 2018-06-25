@@ -43,3 +43,4 @@ func InitHttp() {
 		log.Fatal(err.Error())
 	}
 }
+

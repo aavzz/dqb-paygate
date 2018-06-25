@@ -117,13 +117,14 @@ func (e *ekam) init() error {
 //RegisterReceipt sends receipt info to ekam
 func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
 
-	ui, err := billing.Billing.GetUserInfo(cid)
-	if err != nil {
-		return err
-	}
-
 	var rcptLines ReceiptLines
 	var rcpt ReceiptRequest
+
+	ui := billing.Billing.GetUserInfo(cid)
+	if ui != nil {
+		rcpt.Email = ui.Email
+  		rcpt.Phone_number = ui.PhoneNumber
+	}
 
 	rcptLines.Price = sum
       	rcptLines.Quantity = 1
@@ -134,8 +135,6 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
   	//rcpt.Order_id = pid
   	//rcpt.Order_number    string
   	rcpt.Type = t
-  	rcpt.Email = ui.Email
-  	rcpt.Phone_number = ui.PhoneNumber
   	rcpt.Should_print = false
   	rcpt.Cash_amount = 0
   	rcpt.Electron_amount = sum

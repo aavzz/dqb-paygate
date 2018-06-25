@@ -9,7 +9,7 @@ import (
 
 type billing interface {
 	init() error
-	GetUserInfo(cid string) (*UserInfo, error)
+	GetUserInfo(cid string) *UserInfo
 	StorePayment(pid,cid,channel string, sum float32) error
 	Shutdown() error
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/aavzz/daemon/log"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
+	"regexp"
 )
 
 type telix struct {
@@ -30,20 +31,50 @@ func (b telix) init() error {
 }
 
 //GetUserInfo checks if a given user exists
-func (b telix) GetUserInfo(cid string) (*UserInfo, error) {
-	rows, err := b.dbh.Query("SELECT phone,mail,cid FROM contract WHERE cid=$1", cid)
+func (b telix) GetUserInfo(cid string) *UserInfo {
+	rows, err := b.dbh.Query("SELECT COALESCE(phone, '') phone, COALESCE(mail, '') mail FROM contract WHERE cid=$1", cid)
         if err != nil {
-		return nil, err
+		log.Error("Telix: " + err.Error() + ": " + cid)
+		return nil
         }
+	defer rows.Close()
         if !rows.Next() {
-		return nil, errors.New("No rows found:" + cid)
+		log.Error("Telix: no user info found: " + cid)
+		return nil
 	}
-
 	var ui UserInfo
         if err := rows.Scan(&ui.PhoneNumber, &ui.Email); err != nil {
-            return nil, err
+	    log.Error("Telix: " + err.Error() + ": " + cid)
+            return nil
         }
-	return &ui, nil
+
+	//Normalize phone number (remove all non-digits)
+        reg, err := regexp.Compile(`[^\d]`)
+        if err != nil {
+                log.Error("Telix: " + err.Error())
+		return nil
+        }
+        processedString := reg.ReplaceAllString(ui.PhoneNumber, "")
+
+	if m, _ := regexp.MatchString(`^7\d\d\d\d\d\d\d\d\d\d$`, ui.PhoneNumber); !m {
+		if ui.PhoneNumber != "" {
+			log.Error("Junk phone number: " + ui.PhoneNumber + "(" + cid + ")");
+			ui.PhoneNumber = "";
+		} else {
+			log.Error("Empty phone number: " cid);
+		}
+        }
+
+	if m, _ := regexp.MatchString(`^.+@.+\..+$`, ui.Email); !m {
+		if ui.Email != "" {
+			log.Error("Junk email: " + ui.Email + "(" + cid + ")");
+			ui.Email = "";
+		} else {
+			log.Error("Empty email: " cid);
+		}
+        }
+
+	return &ui
 }
 
 //StorePayment stores payment and checks if it has really been stored
@@ -54,16 +85,18 @@ func (b telix) StorePayment(pid, cid, channel string, sum float32) error {
 	if err != nil {
 		return err
 	}
+	defer rows.Close()
         if rows.Next() {
             log.Info("Double insertion attempt, ignoring: " + pid)
             return nil
         }
 
-	rows, err = b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
+	rows1, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
 	if err != nil {
 		return err
 	}
-        if !rows.Next() {
+	defer rows1.Close()
+        if !rows1.Next() {
 		return errors.New("Cannot find inserted payment " + pid)
 	}
 
@@ -98,11 +131,12 @@ func (b telix) StorePayment(pid, cid, channel string, sum float32) error {
 	}
 
         //check the payment, just in case
-	rows, err = b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
+	rows3, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
 	if err != nil {
 		return err
 	}
-        if rows.Next() {
+	defer rows3.Close()
+        if rows3.Next() {
             return nil
         }
 	return errors.New("Cannot find inserted payment: " + pid)
