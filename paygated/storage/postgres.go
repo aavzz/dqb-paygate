@@ -2,7 +2,6 @@ package storage
 
 import (
 	"database/sql"
-	"errors"
 	"github.com/aavzz/daemon/log"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
