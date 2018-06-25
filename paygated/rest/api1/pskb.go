@@ -5,7 +5,7 @@ package api1
 
 import (
 	"github.com/aavzz/dqb-paygate/paygated/billing"
-	"github.com/aavzz/d1b-paygate/paygated/storage"
+	"github.com/aavzz/dqb-paygate/paygated/storage"
 	"github.com/spf13/viper"
 	"net/http"
 	"regexp"
