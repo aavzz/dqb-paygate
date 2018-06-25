@@ -16,21 +16,11 @@ import (
 func Operator(w http.ResponseWriter, r *http.Request) {
 
         cmd := r.FormValue("uact")
-        payId := r.FormValue("trans")
-        terminal := r.FormValue("term")
         userId := r.FormValue("cid")
         sum := r.FormValue("sum")
 
-        w.Header().Set("Content-type", "text/html")
+        w.Header().Set("Content-type", "text/json")
 
-        if m, _ := regexp.MatchString(`^\d+$`, payId); !m {
-                    w.Write([]byte("payment id is not numeric"))
-                    return
-        }
-        if m, _ := regexp.MatchString(`^\d+$`, terminal); !m {
-                    w.Write([]byte("terminal is not numeric"))
-                    return
-        }
         if m, _ := regexp.MatchString(`^\d+\.\d\d$`, sum); !m {
                     w.Write([]byte("wrong sum format"))
                     return
@@ -44,7 +34,8 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 	sumFloat := float32(value)
 
         switch cmd {
-        case "payment":
+        case "charge":
+        case "return":
                 if err := storage.Storage.StorePayment(payId, userId, "operator", terminal, sumFloat); err == nil {
                     w.Write([]byte("status=0"))
                 } else {
