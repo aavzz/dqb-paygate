@@ -4,7 +4,7 @@ paygated processes payments
 package main
 
 import (
-	"github.com/aavzz/gqb-paygate/paygated/cmd"
+	"github.com/aavzz/dqb-paygate/paygated/cmd"
 )
 
 func main() {
