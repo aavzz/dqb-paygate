@@ -23,6 +23,7 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 
         if m, _ := regexp.MatchString(`^\d+\.\d\d$`, sum); !m {
                     w.Write([]byte("wrong sum format"))
+			log.Info("Operator: wrong sum format")
                     return
         }
         if m, _ := regexp.MatchString(viper.GetString("billing.uid_format"), userId); !m {
