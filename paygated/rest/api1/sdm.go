@@ -70,7 +70,7 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 	        	w.Write([]byte("</Response>"))
                 }
         case "payment":
-                p := storage.Storage.StorePayment(payId, userId, "sdm", terminal, sumFloat, "in")
+                p := storage.Storage.StorePayment(payId, userId, "sdm", terminal, "in", sumFloat)
                 if p != nil {
 			w.Write([]byte("<?xml version=\"1.0\" encoding=\"windows-1251\"?>"))
 			w.write([]byte("<Response>"))

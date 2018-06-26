@@ -4,7 +4,6 @@ Package api1 implements version 1 of notifyd API.
 package api1
 
 import (
-	"github.com/aavzz/dqb-paygate/paygated/billing"
 	"github.com/aavzz/dqb-paygate/paygated/storage"
 	"github.com/spf13/viper"
 	"net/http"
@@ -35,13 +34,13 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 
         switch cmd {
         case "receive":
-                if err := storage.Storage.StorePayment("", userId, "operator", "billing", sumFloat, "in"); err == nil {
+                if err := storage.Storage.StorePayment("", userId, "operator", "billing", "in", sumFloat); err == nil {
                     w.Write([]byte("OK"))
                 } else {
                     w.Write([]byte("FAILURE"))
                 }
         case "return":
-                if err := storage.Storage.StorePayment("", userId, "operator", "billing", sumFloat, "out"); err == nil {
+                if err := storage.Storage.StorePayment("", userId, "operator", "billing", "out", sumFloat); err == nil {
                     w.Write([]byte("OK"))
                 } else {
                     w.Write([]byte("FAILURE"))
