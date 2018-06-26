@@ -54,7 +54,7 @@ func (b telix) GetUserInfo(cid string) *UserInfo {
                 log.Error("Telix: " + err.Error())
 		return nil
         }
-        ui.PhoneNumber := reg.ReplaceAllString(ui.PhoneNumber, "")
+        ui.PhoneNumber = reg.ReplaceAllString(ui.PhoneNumber, "")
 
 	if m, _ := regexp.MatchString(`^7\d\d\d\d\d\d\d\d\d\d$`, ui.PhoneNumber); !m {
 		if ui.PhoneNumber != "" {
