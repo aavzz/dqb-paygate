@@ -43,17 +43,20 @@ func (s *postgres) StorePayment(pid,cid,channel,terminal,direction string, sum f
         defer rows.Close()
         if !rows.Next() {
 		if pid != "" {
-
 	        	_, err := s.dbh.Exec("INSERT INTO payments(channel_payment_id, paymant_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction) VALUES ($1, $2, $3, $4, $5, $6)",
                                   pid, sum, cid, channel, terminal, direction)
+	       		if err != nil {
+				log.Error("Postgres: " + err.Error())
+				return nil
+        		}
 		} else {
 	        	_, err := s.dbh.Exec("INSERT INTO payments(paymant_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction) VALUES ($1, $2, $3, $4, $5)",
                                   sum, cid, channel, terminal, direction)
+	       		if err != nil {
+				log.Error("Postgres: " + err.Error())
+				return nil
+        		}
 		}
-	       	if err != nil {
-			log.Error("Postgres: " + err.Error())
-			return nil
-        	}
 
 		rows1, err := s.dbh.Query("SELECT id,tstamp_paygate FROM payments WHERE payment_channel=$1 AND channel_payment_id=$2", channel, pid)
 		if err != nil {
