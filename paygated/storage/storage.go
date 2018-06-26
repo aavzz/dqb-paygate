@@ -8,7 +8,7 @@ type storage interface {
         init() error
 	StorePayment(pid,cid,channel,terminal,direction string, sum float32) *Payment
 	GetUnhandledBilling() map[uint64]Unhandled
-	GetUnhandledOfd() (map[uint64]Unhandled, error)
+	GetUnhandledOfd() map[uint64]Unhandled
 	SetHandledBilling(id uint64) error
 	SetHandledOfd(id uint64) error
         Shutdown() error
