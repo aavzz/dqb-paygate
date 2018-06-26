@@ -6,7 +6,7 @@ import (
 
 type storage interface {
         init() error
-	StorePayment(pid,cid,channel,terminal string, sum float32) *Payment
+	StorePayment(pid,cid,channel,terminal,direction string, sum float32) *Payment
 	GetUnhandledBilling() (map[uint64]Unhandled, error)
 	GetUnhandledOfd() (map[uint64]Unhandled, error)
 	SetHandledBilling(id uint64) error

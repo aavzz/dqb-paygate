@@ -30,7 +30,7 @@ func (s *postgres) init() error {
 }
 
 //StorePayment stores payment in local database and checks if it has really been stored
-func (s *postgres) StorePayment(pid,cid,channel,terminal string, sum float32) *Payment {
+func (s *postgres) StorePayment(pid,cid,channel,terminal,direction string, sum float32) *Payment {
 
         var p Payment
 
@@ -42,8 +42,15 @@ func (s *postgres) StorePayment(pid,cid,channel,terminal string, sum float32) *P
         }
         defer rows.Close()
         if !rows.Next() {
-	        if _, err := s.dbh.Exec("INSERT INTO payments(channel_payment_id, paymant_sum, payment_subject_id, payment_channel, channel_terminal_id) VALUES ($1, $2, $3, $4, $5)",
-                                  pid, sum, cid, channel, terminal); err != nil {
+		if pid != "" {
+
+	        	_, err := s.dbh.Exec("INSERT INTO payments(channel_payment_id, paymant_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction) VALUES ($1, $2, $3, $4, $5, $6)",
+                                  pid, sum, cid, channel, terminal, direction)
+		} else {
+	        	_, err := s.dbh.Exec("INSERT INTO payments(paymant_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction) VALUES ($1, $2, $3, $4, $5)",
+                                  sum, cid, channel, terminal, direction)
+		}
+	       	if err != nil {
 			log.Error("Postgres: " + err.Error())
 			return nil
         	}

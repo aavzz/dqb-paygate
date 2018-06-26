@@ -34,14 +34,18 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 	sumFloat := float32(value)
 
         switch cmd {
-        case "charge":
-        case "return":
-                if err := storage.Storage.StorePayment(payId, userId, "operator", terminal, sumFloat); err == nil {
-                    w.Write([]byte("status=0"))
+        case "receive":
+                if err := storage.Storage.StorePayment("", userId, "operator", "billing", sumFloat, "in"); err == nil {
+                    w.Write([]byte("OK"))
                 } else {
-                    w.Write([]byte("status=-3"))
+                    w.Write([]byte("FAILURE"))
+                }
+        case "return":
+                if err := storage.Storage.StorePayment("", userId, "operator", "billing", sumFloat, "out"); err == nil {
+                    w.Write([]byte("OK"))
+                } else {
+                    w.Write([]byte("FAILURE"))
                 }
         }
-
 }
 

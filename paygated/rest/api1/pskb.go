@@ -65,7 +65,7 @@ func Pskb(w http.ResponseWriter, r *http.Request) {
                     w.Write([]byte("status=-1"))
                 }
 	case "payment":
-                p := storage.Storage.StorePayment(payId, userId, "pskb", terminal, sumFloat)
+                p := storage.Storage.StorePayment(payId, userId, "pskb", terminal, sumFloat, "in")
                 if p != nil {
                     w.Write([]byte("status=0"))
                 } else {
