@@ -60,15 +60,15 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("<?xml version=\"1.0\" encoding=\"windows-1251\"?>"))
 			w.Write([]byte("<Response>"))
 	        	w.Write([]byte("  <Result>0</Result>"))
-	        	w.Write([]byte("  <PaymentId>" + $payId + "</PaymentId>"))
+	        	w.Write([]byte("  <PaymentId>" + payId + "</PaymentId>"))
 	        	w.Write([]byte("  <Description>OK</Description>"))
 	        	w.Write([]byte("</Response>"))
                 } else {
 			w.Write([]byte("<?xml version=\"1.0\" encoding=\"windows-1251\"?>"))
 			w.Write([]byte("<Response>"))
 	        	w.Write([]byte("  <Result>1</Result>"))
-	        	w.Write([]byte("  <PaymentId>" + $payId + "</PaymentId>"))
-	        	w.Write([]byte("  <Description>USER NOT FOUND(" + $userId + ")</Description>"))
+	        	w.Write([]byte("  <PaymentId>" + payId + "</PaymentId>"))
+	        	w.Write([]byte("  <Description>USER NOT FOUND(" + userId + ")</Description>"))
 	        	w.Write([]byte("</Response>"))
                 }
         case "payment":
@@ -78,7 +78,7 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("<Response>"))
 	        	w.Write([]byte("  <Result>0</Result>"))
 	        	w.Write([]byte("  <PaymentNumber>dqb" + fmt.Sprintf("%d", p.Number) + "</PaymentNumber>"))
-	        	w.Write([]byte("  <PaymentId>" + $payId + "</PaymentId>"))
+	        	w.Write([]byte("  <PaymentId>" + payId + "</PaymentId>"))
 	        	w.Write([]byte("  <PaymentTime>" + p.Time + "</PaymentTime>"))
 	        	w.Write([]byte("  <Description>OK</Description>"))
 	        	w.Write([]byte("</Response>"))
@@ -86,7 +86,7 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("<?xml version=\"1.0\" encoding=\"windows-1251\"?>"))
 			w.Write([]byte("<Response>"))
 	        	w.Write([]byte("  <Result>1</Result>"))
-	        	w.Write([]byte("  <PaymentId>" + $payId + "</PaymentId>"))
+	        	w.Write([]byte("  <PaymentId>" + payId + "</PaymentId>"))
 	        	w.Write([]byte("  <Description>DB FAILURE</Description>"))
 	        	w.Write([]byte("</Response>"))
                 }
