@@ -4,6 +4,7 @@ Package api1 implements version 1 of notifyd API.
 package api1
 
 import (
+	"github.com/aavzz/daemon/log"
 	"github.com/aavzz/dqb-paygate/paygated/billing"
 	"github.com/aavzz/dqb-paygate/paygated/storage"
 	"github.com/spf13/viper"
@@ -56,14 +57,14 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
                 ui := billing.Billing.GetUserInfo(userId)
                 if ui != nil {
 			w.Write([]byte("<?xml version=\"1.0\" encoding=\"windows-1251\"?>"))
-			w.write([]byte("<Response>"))
+			w.Write([]byte("<Response>"))
 	        	w.Write([]byte("  <Result>0</Result>"))
 	        	w.Write([]byte("  <PaymentId>" + $payId + "</PaymentId>"))
 	        	w.Write([]byte("  <Description>OK</Description>"))
 	        	w.Write([]byte("</Response>"))
                 } else {
 			w.Write([]byte("<?xml version=\"1.0\" encoding=\"windows-1251\"?>"))
-			w.write([]byte("<Response>"))
+			w.Write([]byte("<Response>"))
 	        	w.Write([]byte("  <Result>1</Result>"))
 	        	w.Write([]byte("  <PaymentId>" + $payId + "</PaymentId>"))
 	        	w.Write([]byte("  <Description>USER NOT FOUND(" + $userId + ")</Description>"))
@@ -73,7 +74,7 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
                 p := storage.Storage.StorePayment(payId, userId, "sdm", terminal, "in", sumFloat)
                 if p != nil {
 			w.Write([]byte("<?xml version=\"1.0\" encoding=\"windows-1251\"?>"))
-			w.write([]byte("<Response>"))
+			w.Write([]byte("<Response>"))
 	        	w.Write([]byte("  <Result>0</Result>"))
 	        	w.Write([]byte("  <PaymentNumber>dqb" + fmt.Sprintf("%d", p.Number) + "</PaymentNumber>"))
 	        	w.Write([]byte("  <PaymentId>" + $payId + "</PaymentId>"))
@@ -82,7 +83,7 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 	        	w.Write([]byte("</Response>"))
                 } else {
 			w.Write([]byte("<?xml version=\"1.0\" encoding=\"windows-1251\"?>"))
-			w.write([]byte("<Response>"))
+			w.Write([]byte("<Response>"))
 	        	w.Write([]byte("  <Result>1</Result>"))
 	        	w.Write([]byte("  <PaymentId>" + $payId + "</PaymentId>"))
 	        	w.Write([]byte("  <Description>DB FAILURE</Description>"))

@@ -4,6 +4,7 @@ Package api1 implements version 1 of notifyd API.
 package api1
 
 import (
+	"github.com/aavzz/daemon/log"
 	"github.com/aavzz/dqb-paygate/paygated/storage"
 	"github.com/spf13/viper"
 	"net/http"
