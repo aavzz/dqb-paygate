@@ -61,7 +61,7 @@ func (b telix) GetUserInfo(cid string) *UserInfo {
 			log.Error("Junk phone number: " + ui.PhoneNumber + "(" + cid + ")");
 			ui.PhoneNumber = "";
 		} else {
-			log.Error("Empty phone number: " cid);
+			log.Error("Empty phone number: " + cid);
 		}
         }
 
@@ -70,7 +70,7 @@ func (b telix) GetUserInfo(cid string) *UserInfo {
 			log.Error("Junk email: " + ui.Email + "(" + cid + ")");
 			ui.Email = "";
 		} else {
-			log.Error("Empty email: " cid);
+			log.Error("Empty email: " + cid);
 		}
         }
 
