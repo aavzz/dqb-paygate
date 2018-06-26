@@ -27,18 +27,14 @@ func InitOfd() error {
             for {
                 time.Sleep(10 * time.Second)
 
-                s, err := storage.Storage.GetUnhandledOfd()
-                if err != nil {
-                        log.Fatal(err.Error())
-                }
-                for k, v := range s {
-                        err = Ofd.RegisterReceipt(v.Cid, v.Type, v.Sum)
-                        if err == nil {
-                                err = storage.Storage.SetHandledOfd(k)
-                                if err != nil {
-                                        log.Fatal(err.Error())
-                                }
-                        }
+                s := storage.Storage.GetUnhandledOfd()
+                if s != nil {
+                	for k, v := range s {
+                       	 err = Ofd.RegisterReceipt(v.Cid, v.Type, v.Sum)
+                       	 if err == nil {
+                       	         storage.Storage.SetHandledOfd(k)
+                       	 }
+			}
                 }
             }
         }()

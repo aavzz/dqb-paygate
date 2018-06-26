@@ -144,6 +144,7 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
 
 	jsonValue, err := json.Marshal(rcpt)
 	if err != nil {
+		log.Error("Ekam: " + err.Error())
 		return err
 	}
 
@@ -154,6 +155,7 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
 	c := &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}}
 	resp, err := c.Do(req)
 	if err != nil {
+		log.Error("Ekam: " + err.Error())
 		return err
 	}
         if resp != nil {
@@ -164,25 +166,32 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
                 case 201:  
                         body, err := ioutil.ReadAll(resp.Body)
                         if err != nil {
-                                log.Error(err.Error())
+				log.Error("Ekam: " + err.Error())
+                                return err
                         }
                         var v ResponseOk
                         if err := json.Unmarshal(body, &v); err != nil {
+				log.Error("Ekam: " + err.Error())
                                 return err
                         }
+			return nil
                 case 422:  
                         body, err := ioutil.ReadAll(resp.Body)
                         if err != nil {
                                 log.Error(err.Error())
+                                return err
                         }
                         var v ResponseError
                         if err := json.Unmarshal(body, &v); err != nil {
+				log.Error("Ekam: " + err.Error())
                                 return err
                         }
+                        return errors.New(resp.Status)
 		default:
                         return errors.New(resp.Status)
                 }
         } else {
+		log.Error("Ekam: o response from ekam")
                 return errors.New("No response from ekam")
         }
 

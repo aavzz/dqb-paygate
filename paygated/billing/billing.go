@@ -32,17 +32,13 @@ func InitBilling() error {
             for {
                 time.Sleep(10 * time.Second)
 
-	        s, err := storage.Storage.GetUnhandledBilling()
-        	if err != nil {
-                	log.Fatal(err.Error())
-        	}
-		for k, v := range s { 
-                	err = Billing.StorePayment(v.Payment_id, v.Cid, v.Channel, v.Sum)
-        		if err == nil {
-				err = storage.Storage.SetHandledBilling(k)
-        			if err != nil {
-                			log.Fatal(err.Error())
-        			}
+	        s := storage.Storage.GetUnhandledBilling()
+		if s != nil {
+			for k, v := range s { 
+                		err := Billing.StorePayment(v.Payment_id, v.Cid, v.Channel, v.Sum)
+        			if err == nil {
+					storage.Storage.SetHandledBilling(k)
+				}
 			}
 		}
             }

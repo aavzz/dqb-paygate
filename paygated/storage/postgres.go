@@ -84,11 +84,12 @@ func (s *postgres) StorePayment(pid,cid,channel,terminal,direction string, sum f
 }
 
 //GetUnhandledBilling gets unprocessed db records
-func (s *postgres) GetUnhandledBilling() (map[uint64]Unhandled, error) {
+func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
 	m := make(map[uint64]Unhandled)
 	rows, err := s.dbh.Query("SELECT id,payment_subject_id,payment_sum,channel_payment_id,payment_channel FROM payments WHERE tstamp_billing is null")
         if err != nil {
-            return nil, err
+		log.Error("Postgres: " + err.Error())
+            return nil
         }
         defer rows.Close()
         for rows.Next() {
@@ -97,7 +98,8 @@ func (s *postgres) GetUnhandledBilling() (map[uint64]Unhandled, error) {
             var sum float32
             var channel,cid,pid string
             if err := rows.Scan(&id,&cid,&sum,&pid,&channel); err != nil {
-                return nil, err
+		log.Error("Postgres: " + err.Error())
+                return nil
             }
 		m[id] = Unhandled{
 			Cid: cid,
@@ -106,16 +108,16 @@ func (s *postgres) GetUnhandledBilling() (map[uint64]Unhandled, error) {
 			Channel: channel,
 		}
         }
-
-        return m, nil
+        return m
 }
 
 //GetUnhandledOfd gets unprocessed db records
-func (s *postgres) GetUnhandledOfd() (map[uint64]Unhandled, error) {
+func (s *postgres) GetUnhandledOfd() map[uint64]Unhandled {
 	m := make(map[uint64]Unhandled)
 	rows,err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, channel_payment_id, payment_channel, payment_direction FROM payments WHERE tstamp_ofd is null")
         if err != nil {
-            return nil, err
+		log.Error("Postgres: " + err.Error())
+            return nil
         }
         defer rows.Close()
         for rows.Next() {
@@ -124,7 +126,8 @@ func (s *postgres) GetUnhandledOfd() (map[uint64]Unhandled, error) {
             var sum float32
             var channel,cid,pid,t string
             if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&t); err != nil {
-                return nil, err
+		log.Error("Postgres: " + err.Error())
+                return nil
             }
 		m[id] = Unhandled{
 			Cid: cid,
@@ -134,13 +137,13 @@ func (s *postgres) GetUnhandledOfd() (map[uint64]Unhandled, error) {
 			Type: t,
 		}
         }
-
-        return m, nil
+        return m
 }
 
 //SetHandledBilling marks db record as processed
 func (s *postgres) SetHandledBilling(id uint64) error {
         if _, err := s.dbh.Exec("UPDATE payments set tstamp_billing=current_timestamp where id=$1", id); err != nil {
+		log.Error("Postgres: " + err.Error())
             return err
         }
 	return nil
@@ -149,6 +152,7 @@ func (s *postgres) SetHandledBilling(id uint64) error {
 //SetHandledOfd marks db record as processed
 func (s *postgres) SetHandledOfd(id uint64) error {
         if _, err := s.dbh.Exec("UPDATE payments set tstamp_ofd=current_timestamp where id=$1", id); err != nil {
+		log.Error("Postgres: " + err.Error())
             return err
         }
 	return nil
@@ -158,7 +162,7 @@ func (s *postgres) SetHandledOfd(id uint64) error {
 func (s *postgres) Shutdown() error {
         if s.dbh != nil {
                 if err := s.dbh.Close(); err != nil {
-                        log.Error(err.Error())
+                        log.Error("Postgres: " + err.Error())
                         return err
                 }
         }             

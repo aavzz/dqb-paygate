@@ -83,62 +83,58 @@ func (b telix) StorePayment(pid, cid, channel string, sum float32) error {
         //silently ignore double insertion attempts
 	rows, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
 	if err != nil {
+		log.Error("Telix: " + err.Error())
 		return err
 	}
 	defer rows.Close()
         if rows.Next() {
-            log.Info("Double insertion attempt, ignoring: " + pid)
+            log.Info("Double insertion attempt, ignoring: " + channel + " " + pid)
             return nil
         }
 
-	rows1, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
-	if err != nil {
-		return err
-	}
-	defer rows1.Close()
-        if !rows1.Next() {
-		return errors.New("Cannot find inserted payment " + pid)
-	}
-
+	//insert payment
 	t, err := b.dbh.Begin()
         if err != nil {
-			return err
+		log.Error("Telix: " + err.Error())
+		return err
         }
-
 	if _, err = t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES ($1,$2,$3,current_timestamp,$4)", pid,sum,cid,channel); err != nil {
 		if err := t.Rollback(); err != nil {
+			log.Error("Telix: " + err.Error())
 			return err
 		}
+		log.Error("Telix: " + err.Error())
 		return err
 	}
-
 	if _, err = t.Exec("UPDATE contract SET balance=balance+$2 where cid=$1", cid,sum); err != nil {
 		if err := t.Rollback(); err != nil {
+			log.Error("Telix: " + err.Error())
 			return err
 		}
+		log.Error("Telix: " + err.Error())
 		return err
 	}
-
 	if _, err = t.Exec("UPDATE contract SET active=1 where cid=$1 AND balance>0 AND (active!=2 and active!=3 and active!=10)", cid); err != nil {
 		if err := t.Rollback(); err != nil {
 			return err
 		}
 		return err
 	}
-
 	if err = t.Commit(); err != nil {
 		return err
 	}
 
         //check the payment, just in case
-	rows3, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
+	rows1, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
 	if err != nil {
+		log.Error("Telix: " + err.Error())
 		return err
 	}
-	defer rows3.Close()
-        if rows3.Next() {
+	defer rows1.Close()
+        if rows1.Next() {
             return nil
         }
+	log.Error("Telix: Cannot find inserted payment:" + channel + " " + pid)
 	return errors.New("Cannot find inserted payment: " + pid)
 }
 
