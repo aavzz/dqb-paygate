@@ -29,7 +29,7 @@ func InitOfd() error {
                 s := storage.Storage.GetUnhandledOfd()
                 if s != nil {
                 	for k, v := range s {
-                       	 err = Ofd.RegisterReceipt(v.Cid, v.Type, v.Sum)
+                       	 err := Ofd.RegisterReceipt(v.Cid, v.Type, v.Sum)
                        	 if err == nil {
                        	         storage.Storage.SetHandledOfd(k)
                        	 }
