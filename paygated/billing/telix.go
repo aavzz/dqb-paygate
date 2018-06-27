@@ -20,13 +20,14 @@ func (b telix) init() {
 	if  err != nil {
                 log.Fatal(err.Error())
         }
-	log.Info("DB Ping OK") //XXX
+	log.Info("DB Ping") //XXX
         if err = dbh.Ping(); err != nil {
                 if err = dbh.Close(); err != nil {
                         log.Fatal(err.Error())
                 }
                 log.Fatal(err.Error())
         }
+	log.Info("DB Ping OK") //XXX
 	b.dbh = dbh
 }
 
