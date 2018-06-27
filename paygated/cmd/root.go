@@ -15,6 +15,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
+	"fmt" //XXX
 )
 
 var paygated = &cobra.Command{
@@ -25,6 +26,8 @@ var paygated = &cobra.Command{
 }
 
 func paygatedCommand(cmd *cobra.Command, args []string) {
+
+	fmt.Println("AAA") //XXX
 
 	if viper.GetBool("daemonize") == true {
 		log.InitSyslog("paygated")
