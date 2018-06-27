@@ -106,7 +106,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
 	}
-	if _, err = t.Exec("UPDATE contract SET balance=balance+? where cid=?", cid,sum); err != nil {
+	if _, err = t.Exec("UPDATE contract SET balance=balance+? where cid=?", sum,cid); err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err
@@ -116,11 +116,14 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 	}
 	if _, err = t.Exec("UPDATE contract SET active=1 where cid=? AND balance>0 AND (active!=2 and active!=3 and active!=10)", cid); err != nil {
 		if err := t.Rollback(); err != nil {
+			log.Error("Telix: " + err.Error())
 			return err
 		}
+		log.Error("Telix: " + err.Error())
 		return err
 	}
 	if err = t.Commit(); err != nil {
+		log.Error("Telix: " + err.Error())
 		return err
 	}
 
