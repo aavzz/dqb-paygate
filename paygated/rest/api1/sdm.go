@@ -42,7 +42,7 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 			log.Info("Pskb: wrong sum format")	
                     return
         }
-        if m, _ := regexp.MatchString(viper.GetString("billing.uid_format"), userId); !m {
+        if m, _ := regexp.MatchString("^" + viper.GetString("billing.uid_format") + "$", userId); !m {
                     w.Write([]byte("wrong uid format"))
 			log.Info("Pskb: wrong uid format")
                     return
