@@ -11,7 +11,7 @@ import (
 	"github.com/aavzz/dqb-paygate/paygated/rest"
 	"github.com/aavzz/dqb-paygate/paygated/storage"
 	"github.com/aavzz/dqb-paygate/paygated/billing"
-	"github.com/aavzz/dqb-paygate/paygated/ofd"
+//	"github.com/aavzz/dqb-paygate/paygated/ofd"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
