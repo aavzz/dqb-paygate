@@ -10,6 +10,6 @@ create table payments (
    tstamp_paygate      timestamp    not null default current_timestamp,
    tstamp_ofd          timestamp,
    tstamp_billing      timestamp,
-   unique (channel,channel_payment_id)
+   unique (payment_channel,channel_payment_id)
 );
 
