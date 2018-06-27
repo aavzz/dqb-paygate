@@ -19,24 +19,27 @@ func InitOfd() error {
         switch viper.GetString("ofd.type") {
         case "ekam":
                 Ofd = new(ekam)
-		Ofd.init()
         }
 
-        go func() {
-            for {
-                time.Sleep(10 * time.Second)
+	if Ofd != nil {
+		Ofd.init()
 
-                s := storage.Storage.GetUnhandledOfd()
-                if s != nil {
-                	for k, v := range s {
-                       	 err := Ofd.RegisterReceipt(v.Cid, v.Type, v.Sum)
-                       	 if err == nil {
-                       	         storage.Storage.SetHandledOfd(k)
-                       	 }
-			}
-                }
-            }
-        }()
+        	go func() {
+            		for {
+            		    time.Sleep(10 * time.Second)
+
+ 		               s := storage.Storage.GetUnhandledOfd()
+ 		               if s != nil {
+ 		               	for k, v := range s {
+ 		                      	 err := Ofd.RegisterReceipt(v.Cid, v.Type, v.Sum)
+ 		                      	 if err == nil {
+ 	      	                	         storage.Storage.SetHandledOfd(k)
+ 	      	                	 }
+				}
+                		}
+       	     		}
+        	}()
+	}
 
         return nil
 }

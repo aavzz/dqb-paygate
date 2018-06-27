@@ -31,8 +31,10 @@ func InitStorage() error {
         switch viper.GetString("storage.type") {
         case "postgres":
                 Storage = new(postgres)
-		Storage.init()
         }
+	if Sorage != nil {
+		Storage.init()
+	}
 
         return nil
 }

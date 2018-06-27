@@ -24,24 +24,27 @@ func InitBilling() error {
 	switch viper.GetString("billing.type") {
         case "telix":
 		Billing = new(telix)
-		Billing.init()
         }
 
-        go func() {
-            for {
-                time.Sleep(10 * time.Second)
+	if Billing != nil {
+		Billing.init()
 
-	        s := storage.Storage.GetUnhandledBilling()
-		if s != nil {
-			for k, v := range s { 
-                		err := Billing.StorePayment(v.Payment_id, v.Cid, v.Channel, v.Sum)
-        			if err == nil {
-					storage.Storage.SetHandledBilling(k)
+        	go func() {
+          	  for {
+                	time.Sleep(10 * time.Second)
+
+		        s := storage.Storage.GetUnhandledBilling()
+			if s != nil {
+				for k, v := range s { 
+                			err := Billing.StorePayment(v.Payment_id, v.Cid, v.Channel, v.Sum)
+        				if err == nil {
+						storage.Storage.SetHandledBilling(k)
+					}
 				}
 			}
-		}
-            }
-        }()
+          	  }
+		}()
+	}
 
         return nil
 }
