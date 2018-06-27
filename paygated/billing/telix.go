@@ -31,6 +31,12 @@ func (b telix) init() {
 
 //GetUserInfo checks if a given user exists
 func (b telix) GetUserInfo(cid string) *UserInfo {
+
+	if b.dbh == nil {
+		log.Error("DB handle is nil") //XXX
+		return nil
+	}
+
 	rows, err := b.dbh.Query("SELECT COALESCE(phone, '') phone, COALESCE(mail, '') mail FROM contract WHERE cid=$1", cid)
         if err != nil {
 		log.Error("Telix: " + err.Error() + ": " + cid)

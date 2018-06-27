@@ -28,6 +28,7 @@ func Operator(w http.ResponseWriter, r *http.Request) {
         }
         if m, _ := regexp.MatchString("^" + viper.GetString("billing.uid_format") + "$", userId); !m {
                     w.Write([]byte("wrong uid format"))
+			log.Info("Operator: wrong uid format")
                     return
         }
 
@@ -49,7 +50,7 @@ func Operator(w http.ResponseWriter, r *http.Request) {
                 }
         default:       
                     w.Write([]byte("wrong command"))   
-                        log.Info("Pskb: command")         
+                        log.Info("Pskb: wrong command")         
         }
 }
 

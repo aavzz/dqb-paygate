@@ -74,7 +74,7 @@ func Pskb(w http.ResponseWriter, r *http.Request) {
                 }
 	default:
                     w.Write([]byte("wrong command"))
-			log.Info("Pskb: command")
+			log.Info("Pskb: wrong command")
 	}
 }
 
