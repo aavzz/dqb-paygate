@@ -32,7 +32,7 @@ func InitStorage() error {
         case "postgres":
                 Storage = new(postgres)
         }
-	if Sorage != nil {
+	if Storage != nil {
 		Storage.init()
 	}
 
