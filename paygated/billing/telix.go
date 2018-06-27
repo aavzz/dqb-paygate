@@ -32,12 +32,7 @@ func (b *telix) init() {
 //GetUserInfo checks if a given user exists
 func (b *telix) GetUserInfo(cid string) *UserInfo {
 
-	if b.dbh == nil {
-		log.Error("DB handle is nil") //XXX
-		return nil
-	}
-
-	rows, err := b.dbh.Query("SELECT COALESCE(phone, '') phone, COALESCE(mail, '') mail FROM contract WHERE cid=$1", cid)
+	rows, err := b.dbh.Query("SELECT COALESCE(phone, '') phone, COALESCE(mail, '') mail FROM contract WHERE cid=?", cid)
         if err != nil {
 		log.Error("Telix: " + err.Error() + ": " + cid)
 		return nil
@@ -86,7 +81,7 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
 func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 
         //silently ignore double insertion attempts
-	rows, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
+	rows, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=? AND trans=?", channel, pid)
 	if err != nil {
 		log.Error("Telix: " + err.Error())
 		return err
@@ -103,7 +98,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
         }
-	if _, err = t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES ($1,$2,$3,current_timestamp,$4)", pid,sum,cid,channel); err != nil {
+	if _, err = t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES (?,?,?,current_timestamp,?)", pid,sum,cid,channel); err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err
@@ -111,7 +106,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
 	}
-	if _, err = t.Exec("UPDATE contract SET balance=balance+$2 where cid=$1", cid,sum); err != nil {
+	if _, err = t.Exec("UPDATE contract SET balance=balance+? where cid=?", cid,sum); err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err
@@ -119,7 +114,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
 	}
-	if _, err = t.Exec("UPDATE contract SET active=1 where cid=$1 AND balance>0 AND (active!=2 and active!=3 and active!=10)", cid); err != nil {
+	if _, err = t.Exec("UPDATE contract SET active=1 where cid=? AND balance>0 AND (active!=2 and active!=3 and active!=10)", cid); err != nil {
 		if err := t.Rollback(); err != nil {
 			return err
 		}
@@ -130,7 +125,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 	}
 
         //check the payment, just in case
-	rows1, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
+	rows1, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=? AND trans=?", channel, pid)
 	if err != nil {
 		log.Error("Telix: " + err.Error())
 		return err
