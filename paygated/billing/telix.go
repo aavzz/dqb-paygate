@@ -14,7 +14,7 @@ type telix struct {
 }
 
 //init connects to telix billing
-func (b telix) init() {
+func (b *telix) init() {
         dbh, err := sql.Open("mysql", viper.GetString("billing.user") + ":" + viper.GetString("billing.pass") + "@tcp(" + viper.GetString("billing.host") +
                       ":3306)" + "/" + viper.GetString("billing.name"))
 	if  err != nil {
@@ -30,7 +30,7 @@ func (b telix) init() {
 }
 
 //GetUserInfo checks if a given user exists
-func (b telix) GetUserInfo(cid string) *UserInfo {
+func (b *telix) GetUserInfo(cid string) *UserInfo {
 
 	if b.dbh == nil {
 		log.Error("DB handle is nil") //XXX
@@ -83,7 +83,7 @@ func (b telix) GetUserInfo(cid string) *UserInfo {
 }
 
 //StorePayment stores payment and checks if it has really been stored
-func (b telix) StorePayment(pid, cid, channel string, sum float32) error {
+func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 
         //silently ignore double insertion attempts
 	rows, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=$1 AND trans=$2", channel, pid)
@@ -144,7 +144,7 @@ func (b telix) StorePayment(pid, cid, channel string, sum float32) error {
 }
 
 //Shutdown closes billing connection
-func (b telix) Shutdown() error {
+func (b *telix) Shutdown() error {
         if b.dbh != nil {    
                 if err := b.dbh.Close(); err != nil {
                         log.Error(err.Error())
