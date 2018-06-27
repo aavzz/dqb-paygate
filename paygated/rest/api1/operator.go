@@ -47,6 +47,9 @@ func Operator(w http.ResponseWriter, r *http.Request) {
                 } else {
                     w.Write([]byte("FAILURE"))
                 }
+        default:       
+                    w.Write([]byte("wrong command"))   
+                        log.Info("Pskb: command")         
         }
 }
 

@@ -90,6 +90,9 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 	        	w.Write([]byte("  <Description>DB FAILURE</Description>"))
 	        	w.Write([]byte("</Response>"))
                 }
+        default:       
+                    w.Write([]byte("wrong command"))   
+                        log.Info("Pskb: command")         
         }
 }
 
