@@ -38,15 +38,11 @@ func paygatedCommand(cmd *cobra.Command, args []string) {
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal(err.Error())
 	}
-		log.Info("Config read") //XXX
 
         //initialization happens here
         billing.InitBilling()
-		log.Info("billing initialized") //XXX
         ofd.InitOfd()
-		log.Info("ofd initialized") //XXX
         storage.InitStorage()
-		log.Info("storege initialized") //XXX
 
 	if viper.GetBool("daemonize") == true {
 		pid.Write(viper.GetString("pidfile"))
