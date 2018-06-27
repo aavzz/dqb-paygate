@@ -26,6 +26,7 @@ func (b telix) init() error {
                 }
                 log.Fatal(err.Error())
         }
+	log.Info("DB Ping OK") //XXX
 	b.dbh = dbh
         return nil
 }

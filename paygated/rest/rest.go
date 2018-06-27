@@ -39,8 +39,6 @@ func InitHttp() {
 		})
 	}
 
-	log.Info("Initializing http: " + viper.GetString("address")) //XXX
-
 	if err := s.ListenAndServe(); err != nil {
 		log.Fatal(err.Error())
 	}
