@@ -15,8 +15,8 @@ type telix struct {
 
 //init connects to telix billing
 func (b telix) init() {
-        dbh, err := sql.Open("mysql", viper.GetString("billing.user") + ":" + password="+viper.GetString("billing.pass") + "@tcp(" + viper.GetString("billing.host") +
-                      ":3306)" + "/" + viper.GetString("billing.name)
+        dbh, err := sql.Open("mysql", viper.GetString("billing.user") + ":" + viper.GetString("billing.pass") + "@tcp(" + viper.GetString("billing.host") +
+                      ":3306)" + "/" + viper.GetString("billing.name))
 	if  err != nil {
                 log.Fatal(err.Error())
         }
