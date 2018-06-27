@@ -42,7 +42,7 @@ func (s *postgres) StorePayment(pid,cid,channel,terminal,direction string, sum f
         defer rows.Close()
         if !rows.Next() {
 		if pid != "" {
-	        	_, err := s.dbh.Exec("INSERT INTO payments(channel_payment_id, paymant_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction) VALUES ($1, $2, $3, $4, $5, $6)",
+	        	_, err := s.dbh.Exec("INSERT INTO payments(channel_payment_id, payment_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction) VALUES ($1, $2, $3, $4, $5, $6)",
                                   pid, sum, cid, channel, terminal, direction)
 	       		if err != nil {
 				log.Error("Postgres: " + err.Error())

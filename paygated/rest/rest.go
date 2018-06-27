@@ -18,11 +18,11 @@ import (
 // InitHttp sets up router.
 func InitHttp() {
 	r := mux.NewRouter()
-	r.HandleFunc("/pskb.cgi", api1.Pskb).Methods("POST")
-	r.HandleFunc("/pskb", api1.Pskb).Methods("POST")
-	r.HandleFunc("/sdm.cgi", api1.Sdm).Methods("POST")
-	r.HandleFunc("/sdm", api1.Sdm).Methods("POST")
-	r.HandleFunc("/operator", api1.Operator).Methods("POST")
+	r.HandleFunc("/pskb.cgi", api1.Pskb).Methods("GET")
+	r.HandleFunc("/pskb", api1.Pskb).Methods("GET")
+	r.HandleFunc("/sdm.cgi", api1.Sdm).Methods("GET")
+	r.HandleFunc("/sdm", api1.Sdm).Methods("GET")
+	r.HandleFunc("/operator", api1.Operator).Methods("GET")
 
 	s := &http.Server{
 		Addr:     viper.GetString("address"),
