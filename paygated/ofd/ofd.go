@@ -19,6 +19,8 @@ func InitOfd() error {
         switch viper.GetString("ofd.type") {
         case "ekam":
                 Ofd = new(ekam)
+        default:
+                log.Error("Unknown OFD type: " + viper.GetString("ofd.type"))
         }
 
 	if Ofd != nil {

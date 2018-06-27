@@ -24,6 +24,8 @@ func InitBilling() error {
 	switch viper.GetString("billing.type") {
         case "telix":
 		Billing = new(telix)
+	default:
+		log.Error("Unknown billing type: " + viper.GetString("billing.type"))
         }
 
 	if Billing != nil {

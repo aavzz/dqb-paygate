@@ -31,6 +31,8 @@ func InitStorage() error {
         switch viper.GetString("storage.type") {
         case "postgres":
                 Storage = new(postgres)
+        default:
+                log.Error("Unknown storage type: " + viper.GetString("storage.type"))
         }
 	if Storage != nil {
 		Storage.init()
