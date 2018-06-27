@@ -8,15 +8,14 @@ import (
 )
 
 type ofd interface {
-        init() error
+        init()
 	RegisterReceipt(cid,t string, sum float32) error
 }
 
 var Ofd ofd
 
-
 //InitOfd initializes connection to fiscal data operator
-func InitOfd() error {
+func InitOfd() {
         switch viper.GetString("ofd.type") {
         case "ekam":
                 Ofd = new(ekam)
@@ -24,11 +23,15 @@ func InitOfd() error {
                 log.Error("Unknown OFD type: " + viper.GetString("ofd.type"))
         }
 
-	if Ofd != nil {
-		Ofd.init()
+        if Ofd == nil {
+                log.Fatal("Cannot proceed to initialize OFD")
+        }
 
-        	go func() {
-            		for {
+
+	Ofd.init()
+
+       	go func() {
+         		for {
             		    time.Sleep(10 * time.Second)
 
  		               s := storage.Storage.GetUnhandledOfd()
@@ -41,9 +44,7 @@ func InitOfd() error {
 				}
                 		}
        	     		}
-        	}()
-	}
+       	}()
 
-        return nil
 }
 

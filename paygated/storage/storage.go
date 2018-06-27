@@ -6,7 +6,7 @@ import (
 )
 
 type storage interface {
-        init() error
+        init()
 	StorePayment(pid,cid,channel,terminal,direction string, sum float32) *Payment
 	GetUnhandledBilling() map[uint64]Unhandled
 	GetUnhandledOfd() map[uint64]Unhandled
@@ -28,17 +28,19 @@ type Payment struct {
 var Storage storage
 
 //InitStorage initializes storage
-func InitStorage() error {
+func InitStorage() {
         switch viper.GetString("storage.type") {
         case "postgres":
                 Storage = new(postgres)
         default:
                 log.Error("Unknown storage type: " + viper.GetString("storage.type"))
         }
-	if Storage != nil {
-		Storage.init()
-	}
 
-        return nil
+        if Storage == nil {
+                log.Fatal("Cannot proceed to initialize storage")                    
+        }
+
+	Storage.init()
+
 }
 

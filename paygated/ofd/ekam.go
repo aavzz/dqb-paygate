@@ -108,10 +108,9 @@ type ResponseError struct {
 }
 
 //init initializes ekam
-func (e *ekam) init() error {
+func (e *ekam) init() {
 	e.token = viper.GetString("ofd.token")
 	e.url = viper.GetString("ofd.url")
-        return nil
 }
 
 //RegisterReceipt sends receipt info to ekam

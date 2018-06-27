@@ -8,7 +8,7 @@ import (
 )
 
 type billing interface {
-	init() error
+	init()
 	GetUserInfo(cid string) *UserInfo
 	StorePayment(pid,cid,channel string, sum float32) error
 	Shutdown() error
@@ -21,7 +21,7 @@ type UserInfo struct{
 var Billing billing
 
 //InitBilling initializes connection to a billing
-func InitBilling() error {
+func InitBilling() {
 	switch viper.GetString("billing.type") {
         case "telix":
 		Billing = new(telix)
@@ -29,11 +29,14 @@ func InitBilling() error {
 		log.Error("Unknown billing type: " + viper.GetString("billing.type"))
         }
 
-	if Billing != nil {
-		Billing.init()
+	if Billing == nil {
+		log.Fatal("Cannot proceed to initialize billing")
+	}
 
-        	go func() {
-          	  for {
+	Billing.init()
+
+       	go func() {
+         	  for {
                 	time.Sleep(10 * time.Second)
 
 		        s := storage.Storage.GetUnhandledBilling()
@@ -46,9 +49,7 @@ func InitBilling() error {
 				}
 			}
           	  }
-		}()
-	}
+	}()
 
-        return nil
 }
 

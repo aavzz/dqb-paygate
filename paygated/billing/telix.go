@@ -14,7 +14,7 @@ type telix struct {
 }
 
 //init connects to telix billing
-func (b telix) init() error {
+func (b telix) init() {
         dbh, err := sql.Open("mysql", "host="+viper.GetString("billing.host")+" user="+viper.GetString("billing.user")+
                       " password="+viper.GetString("billing.pass")+" dbname="+viper.GetString("billing.name")+" sslmode=disable")
 	if  err != nil {
@@ -28,7 +28,6 @@ func (b telix) init() error {
                 log.Fatal(err.Error())
         }
 	b.dbh = dbh
-        return nil
 }
 
 //GetUserInfo checks if a given user exists

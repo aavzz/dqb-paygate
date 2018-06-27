@@ -13,7 +13,7 @@ type postgres struct {
 }
 
 //init connects to postgres DB
-func (s *postgres) init() error {
+func (s *postgres) init() {
 	dbh, err := sql.Open("postgres", "host="+viper.GetString("storage.host")+" user="+viper.GetString("storage.user")+
                    " password="+viper.GetString("storage.pass")+" dbname="+viper.GetString("storage.name")+" sslmode=disable")
 	if err != nil {
@@ -26,7 +26,6 @@ func (s *postgres) init() error {
 		log.Fatal(err.Error())
 	}
 	s.dbh = dbh
-        return nil
 }
 
 //StorePayment stores payment in local database and checks if it has really been stored
