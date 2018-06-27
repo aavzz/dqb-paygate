@@ -2,6 +2,7 @@ package storage
 
 import (
 	"github.com/spf13/viper"
+	"github.com/aavzz/daemon/log"
 )
 
 type storage interface {

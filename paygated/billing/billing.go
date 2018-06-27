@@ -3,6 +3,7 @@ package billing
 import (
 	"github.com/spf13/viper"
 	"github.com/aavzz/dqb-paygate/paygated/storage"
+	"github.com/aavzz/daemon/log"
         "time"
 )
 

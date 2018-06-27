@@ -1,6 +1,7 @@
 package ofd
 
 import (
+	"github.com/aavzz/daemon/log"
 	"github.com/aavzz/dqb-paygate/paygated/storage"
         "time"
 	"github.com/spf13/viper"
