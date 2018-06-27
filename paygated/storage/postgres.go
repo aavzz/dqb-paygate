@@ -19,6 +19,9 @@ func (s *postgres) init() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+        if dbh == nil {
+                log.Fatal("Failed to create DB handle")      
+        }
 	if err = dbh.Ping(); err != nil {
 		if err = dbh.Close(); err != nil {
 			log.Fatal(err.Error())
