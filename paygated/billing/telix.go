@@ -98,7 +98,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
         }
-	result, err = :t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES (?,?,?,current_timestamp,?)", pid,sum,cid,channel)
+	result, err := t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES (?,?,?,current_timestamp,?)", pid,sum,cid,channel)
 	if err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
@@ -107,7 +107,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
 	}
-	if ra, err = :result.RowsAffected(); err != nil {
+	if ra, err := result.RowsAffected(); err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err
@@ -122,7 +122,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 			return err
 		}
 	}
-	if rerult, err = :t.Exec("UPDATE contract SET balance=balance+? where cid=?", cid, sum); err != nil {
+	if rerult, err := t.Exec("UPDATE contract SET balance=balance+? where cid=?", cid, sum); err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err
@@ -130,7 +130,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
 	}
-	if ra, err = :result.RowsAffected(); err != nil {
+	if ra, err := result.RowsAffected(); err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err
@@ -153,7 +153,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
 	}
-	if ra, err = :result.RowsAffected(); err != nil {
+	if ra, err := result.RowsAffected(); err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err
