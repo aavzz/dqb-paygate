@@ -19,17 +19,19 @@ import (
 func Sdm(w http.ResponseWriter, r *http.Request) {
 
         cmd := r.FormValue("Command")
+       	payId := r.FormValue("PaymentID")
         userId := r.FormValue("ClientId")
 
+       	if m, _ := regexp.MatchString(`^\d+$`, payId); !m {
+                   w.Write([]byte("payment id is not numeric"))
+		log.Info("Pskb: payment id is not numeric")
+                   return
+       	}
         if m, _ := regexp.MatchString("^" + viper.GetString("billing.uid_format") + "$", userId); !m {
                     w.Write([]byte("wrong uid format"))
 			log.Info("Pskb: wrong uid format")
                     return
         }
-
-	sum = strings.Replace(sum, ",", ".", -1)
-	value, _ := strconv.ParseFloat(sum, 32)
-        sumFloat := float32(value)  
 
         w.Header().Set("Content-type", "text/xml")
 
@@ -52,14 +54,8 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 	        	w.Write([]byte("</Response>"))
                 }
         case "payment":
-        	payId := r.FormValue("PaymentID")
         	terminal := r.FormValue("TerminalId")
         	sum := r.FormValue("Ammount")
-        	if m, _ := regexp.MatchString(`^\d+$`, payId); !m {
-                    w.Write([]byte("payment id is not numeric"))
-			log.Info("Pskb: payment id is not numeric")
-                    return
-        	}
         	if m, _ := regexp.MatchString(`^\d+$`, terminal); !m {
                     w.Write([]byte("terminal is not numeric"))
 			log.Info("Pskb: terminal is not numeric")	
@@ -70,6 +66,9 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 			log.Info("Pskb: wrong sum format")	
                     return
         	}
+		sum = strings.Replace(sum, ",", ".", -1)
+		value, _ := strconv.ParseFloat(sum, 32)
+        	sumFloat := float32(value)  
 
                 p := storage.Storage.StorePayment(payId, userId, "sdm", terminal, "in", sumFloat)
                 if p != nil {

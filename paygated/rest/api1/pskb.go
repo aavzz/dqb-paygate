@@ -36,9 +36,6 @@ func Pskb(w http.ResponseWriter, r *http.Request) {
                     return
         }
 
-	value, _ := strconv.ParseFloat(sum, 32)
-        sumFloat := float32(value)  
-
 	switch cmd {
 	case "get_info":
                 ui := billing.Billing.GetUserInfo(userId)
@@ -67,6 +64,8 @@ func Pskb(w http.ResponseWriter, r *http.Request) {
 			log.Info("Pskb: wrong sum format")
                     return
 		}
+		value, _ := strconv.ParseFloat(sum, 32)
+        	sumFloat := float32(value)  
 
                 p := storage.Storage.StorePayment(payId, userId, "pskb", terminal, "in", sumFloat)
                 if p != nil {
