@@ -20,8 +20,8 @@ func (s *postgres) init() {
 		log.Fatal(err.Error())
 	}
 	if err = dbh.Ping(); err != nil {
-		if err1 := dbh.Close(); err1 != nil {
-			log.Fatal(err1.Error())
+		if err := dbh.Close(); err != nil {
+			log.Fatal(err.Error())
 		}
 		log.Fatal(err.Error())
 	}
