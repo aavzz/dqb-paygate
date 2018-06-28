@@ -124,7 +124,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		}
 		return errors.New("Had to rollback")
 	}
-	result, err = t.Exec("UPDATE contract SET balance=balance+? where cid=?", cid, sum)
+	result, err = t.Exec("UPDATE contract SET balance=balance+? where cid=?", sum, cid)
 	if err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
