@@ -5,11 +5,12 @@ import (
 	"github.com/aavzz/dqb-paygate/paygated/storage"
         "time"
 	"github.com/spf13/viper"
+	"fmt"
 )
 
 type ofd interface {
         init()
-	RegisterReceipt(cid,t string, sum float32) error
+	RegisterReceipt(pid, cid,t string, sum float32) error
 }
 
 var Ofd ofd
@@ -45,7 +46,13 @@ func InitOfd() {
  		               s := storage.Storage.GetUnhandledOfd()
  		               if s != nil {
  		               	for k, v := range s {
- 		                      	 err := Ofd.RegisterReceipt(v.Cid, v.Type, v.Sum)
+					switch v.Type {
+					case "in" 
+						v.Type = "sale"
+					case "out" 
+						v.Type = "return"
+					}
+ 		                      	 err := Ofd.RegisterReceipt("dqb" + fmt.Sprintf("%d", k), v.Cid, v.Type, v.Sum)
  		                      	 if err == nil {
  	      	                	         storage.Storage.SetHandledOfd(k)
  	      	                	 }
