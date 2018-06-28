@@ -119,15 +119,11 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
 	var rcptLines ReceiptLines
 	var rcpt ReceiptRequest
 
-		log.Info("Ekam: AAA") //XXX
 	ui := billing.Billing.GetUserInfo(cid)
-		log.Info("Ekam: BBB") //XXX
 	if ui != nil {
 		rcpt.Email = ui.Email
   		rcpt.Phone_number = ui.PhoneNumber
 	}
-		log.Info("Ekam: CCC") //XXX
-
 	rcptLines.Price = sum
       	rcptLines.Quantity = 1
       	rcptLines.Title = "Услуги"
@@ -151,6 +147,10 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
 	}
 
 	req, err := http.NewRequest("POST", e.url, bytes.NewBuffer(jsonValue))
+	if err != nil {
+		log.Error("Ekam: " + err.Error())
+		return err
+	}
 	req.Header.Set("X-Access-Token", e.token)
 	req.Header.Set("Content-Type", "application/json")
 
