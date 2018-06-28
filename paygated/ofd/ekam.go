@@ -129,6 +129,7 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
       	rcptLines.Title = "Услуги"
       	rcptLines.Total_price = sum
       	//rcptLines.Vat_rate    
+	log.Error("Ekam: OOO") //XXX
 
   	//rcpt.Order_id = pid
   	//rcpt.Order_number    string
