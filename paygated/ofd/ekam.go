@@ -129,7 +129,6 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
       	rcptLines.Title = "Услуги"
       	rcptLines.Total_price = sum
       	//rcptLines.Vat_rate    
-	log.Error("Ekam: OOO") //XXX
 
   	//rcpt.Order_id = pid
   	//rcpt.Order_number    string
@@ -139,9 +138,9 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
   	rcpt.Electron_amount = sum
   	//rcpt.Cashier_name    string
   	rcpt.Draft = true
-  	rcpt.Lines[0] = rcptLines
-
 	log.Error("Ekam: AAA") //XXX
+  	rcpt.Lines = append(rcpt.Lines, rcptLines)
+
 
 
 	jsonValue, err := json.Marshal(rcpt)
