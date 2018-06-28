@@ -87,8 +87,8 @@ func (e *ekam) RegisterReceipt(pid, cid, t string, sum float32) error {
 				log.Error("Ekam: " + err.Error())
                                 return err
                         }
-	jsonValue, _ := json.MarshalIndent(rcpt, "", "    ") //XXX
-	log.Info(string(jsonValue))
+	jsonValue, _ := json.MarshalIndent(v, "", "    ") //XXX
+	log.Info(resp.StatusCode + string(jsonValue))
 			return nil
                 case 422:  
                         body, err := ioutil.ReadAll(resp.Body)
@@ -101,8 +101,8 @@ func (e *ekam) RegisterReceipt(pid, cid, t string, sum float32) error {
 				log.Error("Ekam: " + err.Error())
                                 return err
                         }
-	jsonValue, _ := json.MarshalIndent(rcpt, "", "    ") //XXX
-	log.Info(string(jsonValue))
+	jsonValue, _ := json.MarshalIndent(v, "", "    ") //XXX
+	log.Info(resp.StatusCode + string(jsonValue))
                         return errors.New(resp.Status)
 		default:
 			log.Error("Ekam: " + resp.Status)
