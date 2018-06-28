@@ -18,7 +18,7 @@ type ReceiptRequest struct {
   CashAmount     float32        `json:"cash_ammount"`
   ElectronAmount float32        `json:"electron_ammount"`
   CashierName    string         `json:"cashier_name"`
-  Draft          bool `         `json:"draft"`
+  Draft          bool           `json:"draft"`
   Lines          []ReceiptLines `json:"lines"`
 }
 
