@@ -98,13 +98,29 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
         }
-	if _, err = t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES (?,?,?,current_timestamp,?)", pid,sum,cid,channel); err != nil {
+	result, err = t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES (?,?,?,current_timestamp,?)", pid,sum,cid,channel)
+	if err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err
 		}
 		log.Error("Telix: " + err.Error())
 		return err
+	}
+	if ra, err = result.RowsAffected(); err != nil {
+		if err := t.Rollback(); err != nil {
+			log.Error("Telix: " + err.Error())
+			return err
+		}
+		log.Error("Telix: " + err.Error())
+		return err
+	}
+	if ra != 1 {
+		log.Error("Telix: insert into payment failed, rolling back")
+		if err := t.Rollback(); err != nil {
+			log.Error("Telix: " + err.Error())
+			return err
+		}
 	}
 	if _, err = t.Exec("UPDATE contract SET balance=balance+? where cid=?", cid, sum); err != nil {
 		if err := t.Rollback(); err != nil {
@@ -114,6 +130,21 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
 	}
+	if ra, err = result.RowsAffected(); err != nil {
+		if err := t.Rollback(); err != nil {
+			log.Error("Telix: " + err.Error())
+			return err
+		}
+		log.Error("Telix: " + err.Error())
+		return err
+	}
+	if ra != 1 {
+		log.Error("Telix: update contract(1) failed, rolling back")
+		if err := t.Rollback(); err != nil {
+			log.Error("Telix: " + err.Error())
+			return err
+		}
+	}
 	if _, err = t.Exec("UPDATE contract SET active=1 where cid=? AND balance>0 AND (active!=2 and active!=3 and active!=10)", cid); err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
@@ -121,6 +152,21 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		}
 		log.Error("Telix: " + err.Error())
 		return err
+	}
+	if ra, err = result.RowsAffected(); err != nil {
+		if err := t.Rollback(); err != nil {
+			log.Error("Telix: " + err.Error())
+			return err
+		}
+		log.Error("Telix: " + err.Error())
+		return err
+	}
+	if ra != 1 {
+		log.Error("Telix: update contract(2) failed, rolling back")
+		if err := t.Rollback(); err != nil {
+			log.Error("Telix: " + err.Error())
+			return err
+		}
 	}
 	if err = t.Commit(); err != nil {
 		log.Error("Telix: " + err.Error())
