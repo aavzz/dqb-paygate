@@ -20,25 +20,25 @@ type ekam struct {
 }
 
 type ReceiptLines struct {
-      Price       float32
-      Quantity    int
-      Title       string
-      Total_price float32
-      Vat_rate    *int8
+      Price       float32 `json:"price"`
+      Quantity    int     `json:"quantity"`
+      Title       string  `json:"title"`
+      TotalPrice float32  `json:"total_price"`
+      VatRate    *int8    `json:"vat_rate"`
 }
 
 type ReceiptRequest struct {
 //  Order_id        string
 //  Order_number    string
-  Type            string
-  Email           string
-  Phone_number    string
-  Should_print    bool
-  Cash_amount     float32
-  Electron_amount float32
+  Type            string `json:"type"`
+  Email           string `json:"email"`
+  Phone_number    string `json:"phone_number"`
+  Should_print    bool   `json:"should_print"`
+  Cash_amount     float32 `json:"cash_ammount"`
+  Electron_amount float32 `json:"electron_ammount"`
 //  Cashier_name    string
-  Draft           bool
-  Lines           []ReceiptLines
+  Draft           bool `json:"draft"`
+  Lines           []ReceiptLines `json:"lines"`
 }
 
 
