@@ -47,9 +47,9 @@ func InitOfd() {
  		               if s != nil {
  		               	for k, v := range s {
 					switch v.Type {
-					case "in" 
+					case "in": 
 						v.Type = "sale"
-					case "out" 
+					case "out":
 						v.Type = "return"
 					}
  		                      	 err := Ofd.RegisterReceipt("dqb" + fmt.Sprintf("%d", k), v.Cid, v.Type, v.Sum)
