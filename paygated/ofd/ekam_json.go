@@ -12,12 +12,12 @@ type ReceiptRequest struct {
   OrderId        string         `json:"order_id"`
   OrderNumber    string         `json:"order_number"`
   Type           string         `json:"type"`
-  Email          string         `json:"email"`
-  PhoneNumber    string         `json:"phone_number"`
+  Email          string         `json:"email,omitempty"`
+  PhoneNumber    string         `json:"phone_number,omitempty"`
   ShouldPrint    bool           `json:"should_print"`
   CashAmount     float32        `json:"cash_amount"`
   ElectronAmount float32        `json:"electron_amount"`
-  CashierName    string         `json:"cashier_name"`
+  CashierName    string         `json:"cashier_name,omitempty"`
   Draft          bool           `json:"draft"`
   Lines          []ReceiptLines `json:"lines"`
 }
