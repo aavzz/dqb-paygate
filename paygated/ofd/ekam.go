@@ -140,11 +140,15 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
   	rcpt.Draft = true
   	rcpt.Lines[0] = rcptLines
 
+	log.Error("Ekam: AAA") //XXX
+
+
 	jsonValue, err := json.Marshal(rcpt)
 	if err != nil {
 		log.Error("Ekam: " + err.Error())
 		return err
 	}
+	log.Error("Ekam: BBB") //XXX
 
 	req, err := http.NewRequest("POST", e.url, bytes.NewBuffer(jsonValue))
 	if err != nil {
@@ -153,6 +157,7 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
 	}
 	req.Header.Set("X-Access-Token", e.token)
 	req.Header.Set("Content-Type", "application/json")
+	log.Error("Ekam: CCC") //XXX
 
 	c := &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}}
 	resp, err := c.Do(req)
