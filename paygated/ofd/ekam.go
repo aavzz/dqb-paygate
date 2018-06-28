@@ -30,10 +30,10 @@ func (e *ekam) RegisterReceipt(pid, cid, t string, sum float32) error {
 
 	ui := billing.Billing.GetUserInfo(cid)
 	if ui != nil {
-		if rcpt.Email != "" {
+		if ui.Email != "" {
 			rcpt.Email = ui.Email
 		}
-		if rcpt.PhoneNumber != "" {
+		if ui.PhoneNumber != "" {
   			rcpt.PhoneNumber = ui.PhoneNumber
 		}
 	}
