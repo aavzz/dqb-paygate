@@ -142,36 +142,19 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		return err
 	}
 	if ra != 1 {
-		log.Error("Telix: update contract(1) failed, rolling back")
+		log.Error("Telix: update contract failed, rolling back")
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err
 		}
 	}
-	result, err = t.Exec("UPDATE contract SET active=1 where cid=? AND balance>0 AND (active!=2 and active!=3 and active!=10)", cid)
-	if err != nil {
+	if _, err = t.Exec("UPDATE contract SET active=1 where cid=? AND balance>0 AND (active!=2 and active!=3 and active!=10)", cid); err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err
 		}
 		log.Error("Telix: " + err.Error())
 		return err
-	}
-	ra, err = result.RowsAffected()
-	if err != nil {
-		if err := t.Rollback(); err != nil {
-			log.Error("Telix: " + err.Error())
-			return err
-		}
-		log.Error("Telix: " + err.Error())
-		return err
-	}
-	if ra != 1 {
-		log.Error("Telix: update contract(2) failed, rolling back")
-		if err := t.Rollback(); err != nil {
-			log.Error("Telix: " + err.Error())
-			return err
-		}
 	}
 	if err = t.Commit(); err != nil {
 		log.Error("Telix: " + err.Error())
