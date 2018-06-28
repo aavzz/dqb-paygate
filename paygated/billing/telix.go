@@ -131,7 +131,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
 	}
-	ra, err := result.RowsAffected()
+	ra, err = result.RowsAffected()
 	if err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
@@ -155,7 +155,7 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
 	}
-	ra, err := result.RowsAffected()
+	ra, err = result.RowsAffected()
 	if err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
