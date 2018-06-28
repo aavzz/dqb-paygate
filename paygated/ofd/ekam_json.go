@@ -25,11 +25,11 @@ type ReceiptRequest struct {
 type ResponseOkLines struct {
       Id          uint64   `json:"id"`
       Title       string   `json:"title"`
-      Quantity    float32  `json:"quantity"`
-      TotalPrice  float32  `json:"total_price"`
-      Price       float32  `json:"price"`
+      Quantity    string  `json:"quantity"`
+      TotalPrice  string  `json:"total_price"`
+      Price       string  `json:"price"`
       VatRate     uint8    `json:"vat_rate"`
-      VatAmount   float32  `json:"vat_amount"`
+      VatAmount   string  `json:"vat_amount"`
 }
 
 type ResponseOkFiscalData struct {
@@ -58,7 +58,7 @@ type ResponseOk struct {
   Type               string               `json:"type"`
   Status             string               `json:"status"`
   KktReceiptId       uint                 `json:"kkt_receipt_id"`
-  Amount             float32              `json:"amount"`
+  Amount             string              `json:"amount"`
   CashAmount         float32              `json:"cash_amount"`
   ElectronAmount     float32              `json:"electron_amount"`
   Lines              []ResponseOkLines    `json:"lines"`
