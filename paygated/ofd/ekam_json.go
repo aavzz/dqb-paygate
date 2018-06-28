@@ -58,9 +58,9 @@ type ResponseOk struct {
   Type               string               `json:"type"`
   Status             string               `json:"status"`
   KktReceiptId       uint                 `json:"kkt_receipt_id"`
-  Amount             string              `json:"amount"`
-  CashAmount         float32              `json:"cash_amount"`
-  ElectronAmount     float32              `json:"electron_amount"`
+  Amount             string               `json:"amount"`
+  CashAmount         string               `json:"cash_amount"`
+  ElectronAmount     string               `json:"electron_amount"`
   Lines              []ResponseOkLines    `json:"lines"`
   CashierName        string               `json:"cashier_name"`
   CashierRole        string               `json:"cashier_role"`
