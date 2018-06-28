@@ -15,8 +15,8 @@ type ReceiptRequest struct {
   Email          string         `json:"email"`
   PhoneNumber    string         `json:"phone_number"`
   ShouldPrint    bool           `json:"should_print"`
-  CashAmount     float32        `json:"cash_ammount"`
-  ElectronAmount float32        `json:"electron_ammount"`
+  CashAmount     float32        `json:"cash_amount"`
+  ElectronAmount float32        `json:"electron_amount"`
   CashierName    string         `json:"cashier_name"`
   Draft          bool           `json:"draft"`
   Lines          []ReceiptLines `json:"lines"`
@@ -29,7 +29,7 @@ type ResponseOkLines struct {
       TotalPrice  float32  `json:"total_price"`
       Price       float32  `json:"price"`
       VatRate     uint8    `json:"vat_rate"`
-      VatAmount   float32  `json:"vat_ammount"`
+      VatAmount   float32  `json:"vat_amount"`
 }
 
 type ResponseOkFiscalData struct {
@@ -58,9 +58,9 @@ type ResponseOk struct {
   Type               string               `json:"type"`
   Status             string               `json:"status"`
   KktReceiptId       uint                 `json:"kkt_receipt_id"`
-  Amount             float32              `json:"ammount"`
-  CashAmount         float32              `json:"cash_ammount"`
-  ElectronAmount     float32              `json:"electron_ammount"`
+  Amount             float32              `json:"amount"`
+  CashAmount         float32              `json:"cash_amount"`
+  ElectronAmount     float32              `json:"electron_amount"`
   Lines              []ResponseOkLines    `json:"lines"`
   CashierName        string               `json:"cashier_name"`
   CashierRole        string               `json:"cashier_role"`
