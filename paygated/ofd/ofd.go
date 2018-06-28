@@ -27,6 +27,14 @@ func InitOfd() {
                 log.Fatal("Cannot proceed to initialize OFD")
         }
 
+        if viper.GetString("ofd.url") == "" {
+                log.Fatal("ofd.url cannot be empty")
+        }
+
+        if viper.GetString("ofd.token") == "" {
+                log.Fatal("ofd.token cannot be empty")
+        }
+
 
 	Ofd.init()
 

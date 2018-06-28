@@ -41,7 +41,7 @@ func paygatedCommand(cmd *cobra.Command, args []string) {
 
         //initialization happens here
         billing.InitBilling()
-//        ofd.InitOfd()
+        ofd.InitOfd()
         storage.InitStorage()
 
 	if viper.GetBool("daemonize") == true {

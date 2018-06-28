@@ -26,28 +26,10 @@ func Pskb(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cmd := r.FormValue("uact")
-	payId := r.FormValue("trans")
-	terminal := r.FormValue("term")
 	userId := r.FormValue("cid")
-	sum := r.FormValue("sum")
 
         w.Header().Set("Content-type", "text/html")
 
-        if m, _ := regexp.MatchString(`^\d+$`, payId); !m {
-                    w.Write([]byte("payment id is not numeric"))
-			log.Info("Pskb: payment id is not numeric")
-                    return
-        }
-        if m, _ := regexp.MatchString(`^\d+$`, terminal); !m {
-                    w.Write([]byte("terminal is not numeric"))
-			log.Info("Pskb: terminal is not numeric")
-                    return
-        }
-        if m, _ := regexp.MatchString(`^\d+\.\d\d$`, sum); !m {
-                    w.Write([]byte("wrong sum format"))
-			log.Info("Pskb: wrong sum format")
-                    return
-        }
         if m, _ := regexp.MatchString("^" + viper.GetString("billing.uid_format") + "$", userId); !m {
                     w.Write([]byte("wrong uid format"))
 			log.Info("Pskb: wrong uid format")
@@ -66,6 +48,26 @@ func Pskb(w http.ResponseWriter, r *http.Request) {
                     w.Write([]byte("status=-1"))
                 }
 	case "payment":
+		payId := r.FormValue("trans")
+		terminal := r.FormValue("term")
+		sum := r.FormValue("sum")
+
+	        if m, _ := regexp.MatchString(`^\d+$`, payId); !m {
+                    w.Write([]byte("payment id is not numeric"))
+			log.Info("Pskb: payment id is not numeric")
+                    return
+		}
+		if m, _ := regexp.MatchString(`^\d+$`, terminal); !m {
+                    w.Write([]byte("terminal is not numeric"))
+			log.Info("Pskb: terminal is not numeric")
+                    return
+		}
+		if m, _ := regexp.MatchString(`^\d+\.\d\d$`, sum); !m {
+                    w.Write([]byte("wrong sum format"))
+			log.Info("Pskb: wrong sum format")
+                    return
+		}
+
                 p := storage.Storage.StorePayment(payId, userId, "pskb", terminal, "in", sumFloat)
                 if p != nil {
                     w.Write([]byte("status=0"))

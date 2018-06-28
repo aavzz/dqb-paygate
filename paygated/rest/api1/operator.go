@@ -19,8 +19,6 @@ func Operator(w http.ResponseWriter, r *http.Request) {
         userId := r.FormValue("cid")
         sum := r.FormValue("sum")
 
-        w.Header().Set("Content-type", "text/json")
-
         if m, _ := regexp.MatchString(`^\d+\.\d\d$`, sum); !m {
                     w.Write([]byte("wrong sum format"))
 			log.Info("Operator: wrong sum format")
@@ -34,6 +32,8 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 
 	value, _ := strconv.ParseFloat(sum, 32)
 	sumFloat := float32(value)
+
+        w.Header().Set("Content-type", "text/json")
 
         switch cmd {
         case "receive":

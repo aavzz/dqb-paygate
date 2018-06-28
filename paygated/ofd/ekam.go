@@ -146,6 +146,7 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
 		log.Error("Ekam: " + err.Error())
 		return err
 	}
+		log.Info("Ekam: AAA") //XXX
 
 	req, err := http.NewRequest("POST", e.url, bytes.NewBuffer(jsonValue))
 	req.Header.Set("X-Access-Token", e.token)

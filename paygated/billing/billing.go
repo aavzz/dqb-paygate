@@ -33,6 +33,10 @@ func InitBilling() {
 		log.Fatal("Cannot proceed to initialize billing")
 	}
 
+	if viper.GetString("billing.uid_format") == "" {
+		log.Fatal("uid_format cannot be empty")
+	}
+
 	Billing.init()
 
        	go func() {

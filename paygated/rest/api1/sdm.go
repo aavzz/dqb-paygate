@@ -19,29 +19,8 @@ import (
 func Sdm(w http.ResponseWriter, r *http.Request) {
 
         cmd := r.FormValue("Command")
-        payId := r.FormValue("PaymentID")
-        terminal := r.FormValue("TerminalId")
         userId := r.FormValue("ClientId")
-        sum := r.FormValue("Ammount")
 
-
-        w.Header().Set("Content-type", "text/xml")
-
-        if m, _ := regexp.MatchString(`^\d+$`, payId); !m {
-                    w.Write([]byte("payment id is not numeric"))
-			log.Info("Pskb: payment id is not numeric")
-                    return
-        }
-        if m, _ := regexp.MatchString(`^\d+$`, terminal); !m {
-                    w.Write([]byte("terminal is not numeric"))
-			log.Info("Pskb: terminal is not numeric")	
-                    return
-        }
-        if m, _ := regexp.MatchString(`^\d+,\d\d$`, sum); !m {
-                    w.Write([]byte("wrong sum format"))
-			log.Info("Pskb: wrong sum format")	
-                    return
-        }
         if m, _ := regexp.MatchString("^" + viper.GetString("billing.uid_format") + "$", userId); !m {
                     w.Write([]byte("wrong uid format"))
 			log.Info("Pskb: wrong uid format")
@@ -49,9 +28,10 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
         }
 
 	sum = strings.Replace(sum, ",", ".", -1)
-
 	value, _ := strconv.ParseFloat(sum, 32)
         sumFloat := float32(value)  
+
+        w.Header().Set("Content-type", "text/xml")
 
         switch cmd {
         case "check":
@@ -72,6 +52,25 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 	        	w.Write([]byte("</Response>"))
                 }
         case "payment":
+        	payId := r.FormValue("PaymentID")
+        	terminal := r.FormValue("TerminalId")
+        	sum := r.FormValue("Ammount")
+        	if m, _ := regexp.MatchString(`^\d+$`, payId); !m {
+                    w.Write([]byte("payment id is not numeric"))
+			log.Info("Pskb: payment id is not numeric")
+                    return
+        	}
+        	if m, _ := regexp.MatchString(`^\d+$`, terminal); !m {
+                    w.Write([]byte("terminal is not numeric"))
+			log.Info("Pskb: terminal is not numeric")	
+                    return
+        	}
+        	if m, _ := regexp.MatchString(`^\d+,\d\d$`, sum); !m {
+                    w.Write([]byte("wrong sum format"))
+			log.Info("Pskb: wrong sum format")	
+                    return
+        	}
+
                 p := storage.Storage.StorePayment(payId, userId, "sdm", terminal, "in", sumFloat)
                 if p != nil {
 			w.Write([]byte("<?xml version=\"1.0\" encoding=\"windows-1251\"?>"))
@@ -92,7 +91,7 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
                 }
         default:       
                     w.Write([]byte("wrong command"))   
-                        log.Info("Pskb: wrong command")         
+                        log.Info("Sdm: wrong command")         
         }
 }
 
