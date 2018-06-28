@@ -32,11 +32,11 @@ type ReceiptRequest struct {
 //  Order_number    string
   Type            string `json:"type"`
   Email           string `json:"email"`
-  Phone_number    string `json:"phone_number"`
-  Should_print    bool   `json:"should_print"`
-  Cash_amount     float32 `json:"cash_ammount"`
-  Electron_amount float32 `json:"electron_ammount"`
-//  Cashier_name    string
+  PhoneNumber    string `json:"phone_number"`
+  ShouldPrint    bool   `json:"should_print"`
+  CashAmount     float32 `json:"cash_ammount"`
+  ElectronAmount float32 `json:"electron_ammount"`
+//  CashierName    string
   Draft           bool `json:"draft"`
   Lines           []ReceiptLines `json:"lines"`
 }
@@ -122,21 +122,21 @@ func (e *ekam) RegisterReceipt(cid, t string, sum float32) error {
 	ui := billing.Billing.GetUserInfo(cid)
 	if ui != nil {
 		rcpt.Email = ui.Email
-  		rcpt.Phone_number = ui.PhoneNumber
+  		rcpt.PhoneNumber = ui.PhoneNumber
 	}
 	rcptLines.Price = sum
       	rcptLines.Quantity = 1
       	rcptLines.Title = "Услуги"
-      	rcptLines.Total_price = sum
-      	//rcptLines.Vat_rate    
+      	rcptLines.TotalPrice = sum
+      	//rcptLines.VatRate    
 
   	//rcpt.Order_id = pid
   	//rcpt.Order_number    string
   	rcpt.Type = t
-  	rcpt.Should_print = false
-  	rcpt.Cash_amount = 0
-  	rcpt.Electron_amount = sum
-  	//rcpt.Cashier_name    string
+  	rcpt.ShouldPrint = false
+  	rcpt.CashAmount = 0
+  	rcpt.ElectronAmount = sum
+  	//rcpt.CashierName    string
   	rcpt.Draft = true
   	rcpt.Lines = append(rcpt.Lines, rcptLines)
 
