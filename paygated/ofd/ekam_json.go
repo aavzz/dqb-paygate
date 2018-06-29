@@ -5,7 +5,7 @@ type ReceiptLines struct {
       Quantity   int     `json:"quantity"`
       Title      string  `json:"title"`
       TotalPrice float32 `json:"total_price"`
-      VatRate    *int8   `json:"vat_rate"`
+      VatRate    *int64  `json:"vat_rate"`
 }
 
 type ReceiptRequest struct {
@@ -23,13 +23,13 @@ type ReceiptRequest struct {
 }
 
 type ResponseOkLines struct {
-      Id          uint64   `json:"id"`
-      Title       string   `json:"title"`
-      Quantity    string  `json:"quantity"`
-      TotalPrice  string  `json:"total_price"`
-      Price       string  `json:"price"`
-      VatRate     uint8    `json:"vat_rate"`
-      VatAmount   string  `json:"vat_amount"`
+      Id          uint64 `json:"id"`
+      Title       string `json:"title"`
+      Quantity    string `json:"quantity"`
+      TotalPrice  string `json:"total_price"`
+      Price       string `json:"price"`
+      VatRate     uint8  `json:"vat_rate"`
+      VatAmount   string `json:"vat_amount"`
 }
 
 type ResponseOkFiscalData struct {
