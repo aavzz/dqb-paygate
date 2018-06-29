@@ -124,7 +124,7 @@ func (s *postgres) GetUnhandledOfd() map[uint64]Unhandled {
 
             var id uint64
             var sum float32
-            var channel,cid,pid,t string
+            var channel,cid,pid,t,vat string
             if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&t,&vat); err != nil {
 		log.Error("Postgres: " + err.Error())
                 return nil
