@@ -159,6 +159,15 @@ func (s *postgres) SetHandledOfd(id uint64) error {
 	return nil
 }
 
+//SetHandledNotification marks db record as processed
+func (s *postgres) SetHandledNotification(id uint64) error {
+        if _, err := s.dbh.Exec("UPDATE payments set tstamp_notification=current_timestamp where id=$1", id); err != nil {
+		log.Error("Postgres: " + err.Error())
+            return err
+        }
+	return nil
+}
+
 //Shutdown closes db connection                  
 func (s *postgres) Shutdown() error {
         if s.dbh != nil {
