@@ -95,11 +95,11 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 					log.Error("Ekam: " + err.Error())
                         	        return err
                         	}
+                        	var v ResponseOk
                         	if err := json.Unmarshal(body, &v); err != nil {
 					log.Error("Ekam: " + err.Error())
                                 	return err
 				}
-                        	var v ResponseOk
 				jsonValue, _ := json.MarshalIndent(v, "", "    ")
 				log.Info("200" + string(jsonValue))
                         }
@@ -110,11 +110,11 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
                                 log.Error(err.Error())
                                 return err
                         }
+                        var v ResponseError
                         if err := json.Unmarshal(body, &v); err != nil {
 				log.Error("Ekam: " + err.Error())
                                 return err
                         }
-                        var v ResponseError
 			jsonValue, _ := json.MarshalIndent(v, "", "    ")
 			log.Info("422" + string(jsonValue))
                         return errors.New(resp.Status)
