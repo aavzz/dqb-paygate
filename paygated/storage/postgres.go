@@ -114,7 +114,37 @@ func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
 //GetUnhandledOfd gets unprocessed db records
 func (s *postgres) GetUnhandledOfd() map[uint64]Unhandled {
 	m := make(map[uint64]Unhandled)
-	rows,err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, channel_payment_id, payment_channel,payment_direction, payment_vat FROM payments WHERE tstamp_ofd is null")
+	rows,err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, channel_payment_id, payment_channel, payment_direction, payment_vat FROM payments WHERE tstamp_ofd is null")
+        if err != nil {
+		log.Error("Postgres: " + err.Error())
+            return nil
+        }
+        defer rows.Close()
+        for rows.Next() {
+
+            var id uint64
+            var sum float32
+            var channel,cid,pid,t,vat string
+            if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&t,&vat); err != nil {
+		log.Error("Postgres: " + err.Error())
+                return nil
+            }
+		m[id] = Unhandled{
+			Cid: cid,
+			Sum: sum,
+			PaymentId: pid,
+			Vat: vat,
+			Channel: channel,
+			Type: t,
+		}
+        }
+        return m
+}
+
+//GetUnhandledNotifier gets unprocessed db records
+func (s *postgres) GetUnhandledNotification() map[uint64]Unhandled {
+	m := make(map[uint64]Unhandled)
+	rows,err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, channel_payment_id, payment_channel, payment_direction, payment_vat FROM payments WHERE tstamp_notification is null")
         if err != nil {
 		log.Error("Postgres: " + err.Error())
             return nil
