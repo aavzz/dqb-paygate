@@ -30,7 +30,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 	var rcpt ReceiptRequest
 
 	ui := billing.Billing.GetUserInfo(cid)
-	if viper.GetString("notifier.url") != "" && ui != nil {
+	if viper.GetString("notifier.url") == "" && ui != nil {
 		rcpt.Email = ui.Email
 		if rcpt.Email == "" {
   			rcpt.PhoneNumber = ui.PhoneNumber
