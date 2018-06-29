@@ -85,7 +85,7 @@ func (s *postgres) StorePayment(pid,cid,channel,terminal,direction string, sum f
 //GetUnhandledBilling gets unprocessed db records
 func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
 	m := make(map[uint64]Unhandled)
-	rows, err := s.dbh.Query("SELECT id,payment_subject_id,payment_sum,channel_payment_id,payment_channel FROM payments WHERE tstamp_billing is null")
+	rows, err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, channel_payment_id, payment_channel, payment_vat FROM payments WHERE tstamp_billing is null")
         if err != nil {
 		log.Error("Postgres: " + err.Error())
             return nil
@@ -95,15 +95,16 @@ func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
 
             var id uint64
             var sum float32
-            var channel,cid,pid string
-            if err := rows.Scan(&id,&cid,&sum,&pid,&channel); err != nil {
+            var channel,cid,pid,vat string
+            if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&vat); err != nil {
 		log.Error("Postgres: " + err.Error())
                 return nil
             }
 		m[id] = Unhandled{
 			Cid: cid,
 			Sum: sum,
-			Payment_id: pid,
+			PaymentId: pid,
+			Vat: vat,
 			Channel: channel,
 		}
         }
@@ -113,7 +114,7 @@ func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
 //GetUnhandledOfd gets unprocessed db records
 func (s *postgres) GetUnhandledOfd() map[uint64]Unhandled {
 	m := make(map[uint64]Unhandled)
-	rows,err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, channel_payment_id, payment_channel, payment_direction FROM payments WHERE tstamp_ofd is null")
+	rows,err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, channel_payment_id, payment_channel,payment_direction, payment_vat FROM payments WHERE tstamp_ofd is null")
         if err != nil {
 		log.Error("Postgres: " + err.Error())
             return nil
@@ -124,14 +125,15 @@ func (s *postgres) GetUnhandledOfd() map[uint64]Unhandled {
             var id uint64
             var sum float32
             var channel,cid,pid,t string
-            if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&t); err != nil {
+            if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&t,&vat); err != nil {
 		log.Error("Postgres: " + err.Error())
                 return nil
             }
 		m[id] = Unhandled{
 			Cid: cid,
 			Sum: sum,
-			Payment_id: pid,
+			PaymentId: pid,
+			Vat: vat,
 			Channel: channel,
 			Type: t,
 		}

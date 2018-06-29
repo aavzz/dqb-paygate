@@ -16,7 +16,7 @@ type storage interface {
 }
 
 type Unhandled struct {
-        Cid,Payment_id,Channel,Type string
+        Cid,PaymentId,Channel,Type,Vat string
         Sum float32
 }
 

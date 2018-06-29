@@ -46,7 +46,7 @@ func InitBilling() {
 		        s := storage.Storage.GetUnhandledBilling()
 			if s != nil {
 				for k, v := range s { 
-                			err := Billing.StorePayment(v.Payment_id, v.Cid, v.Channel, v.Sum)
+                			err := Billing.StorePayment(v.PaymentId, v.Cid, v.Channel, v.Sum)
         				if err == nil {
 						storage.Storage.SetHandledBilling(k)
 					}

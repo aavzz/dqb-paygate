@@ -10,6 +10,7 @@ import (
 	"github.com/aavzz/daemon/log"
 	"github.com/aavzz/dqb-paygate/paygated/billing"
 	"github.com/spf13/viper"
+	"strconv"
 )
 
 type ekam struct {
@@ -23,7 +24,7 @@ func (e *ekam) init() {
 }
 
 //RegisterReceipt sends receipt info to ekam
-func (e *ekam) RegisterReceipt(pid, cid, t string, sum float32) error {
+func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 
 	var rcptLines ReceiptLines
 	var rcpt ReceiptRequest
@@ -37,7 +38,10 @@ func (e *ekam) RegisterReceipt(pid, cid, t string, sum float32) error {
       	rcptLines.Quantity = 1
       	rcptLines.Title = "Услуги"
       	rcptLines.TotalPrice = sum
-      	//rcptLines.VatRate    
+	if vat != "" {
+		vatNum := strconv(vat, 0, 8)
+      		rcptLines.VatRate = &vatNum
+	}
 
   	rcpt.OrderId = pid
   	rcpt.OrderNumber = pid
@@ -46,7 +50,11 @@ func (e *ekam) RegisterReceipt(pid, cid, t string, sum float32) error {
   	rcpt.CashAmount = 0
   	rcpt.ElectronAmount = sum
   	rcpt.CashierName = ""
-  	rcpt.Draft = true
+	if viper.GetString("ofd.draft") == "false" {
+  		rcpt.Draft = false
+	} else {
+  		rcpt.Draft = true
+	}
   	rcpt.Lines = append(rcpt.Lines, rcptLines)
 
 	jsonValue, err := json.MarshalIndent(rcpt, "", "    ")
@@ -77,18 +85,20 @@ func (e *ekam) RegisterReceipt(pid, cid, t string, sum float32) error {
 		switch resp.StatusCode {
                 case 200:  
                 case 201:  
-                        body, err := ioutil.ReadAll(resp.Body)
-                        if err != nil {
-				log.Error("Ekam: " + err.Error())
-                                return err
+			if viper.GetString("ofd.verbose") == "true" {
+                        	body, err := ioutil.ReadAll(resp.Body)
+                        	if err != nil {
+					log.Error("Ekam: " + err.Error())
+                        	        return err
+                        	}
+                        	if err := json.Unmarshal(body, &v); err != nil {
+					log.Error("Ekam: " + err.Error())
+                                	return err
+				}
+                        	var v ResponseOk
+				jsonValue, _ := json.MarshalIndent(v, "", "    ")
+				log.Info("200" + string(jsonValue))
                         }
-                        var v ResponseOk
-                        if err := json.Unmarshal(body, &v); err != nil {
-				log.Error("Ekam: " + err.Error())
-                                return err
-                        }
-	jsonValue, _ := json.MarshalIndent(v, "", "    ") //XXX
-	log.Info("200" + string(jsonValue))
 			return nil
                 case 422:  
                         body, err := ioutil.ReadAll(resp.Body)
@@ -96,13 +106,13 @@ func (e *ekam) RegisterReceipt(pid, cid, t string, sum float32) error {
                                 log.Error(err.Error())
                                 return err
                         }
-                        var v ResponseError
                         if err := json.Unmarshal(body, &v); err != nil {
 				log.Error("Ekam: " + err.Error())
                                 return err
                         }
-	jsonValue, _ := json.MarshalIndent(v, "", "    ") //XXX
-	log.Info("422" + string(jsonValue))
+                        var v ResponseError
+			jsonValue, _ := json.MarshalIndent(v, "", "    ")
+			log.Info("422" + string(jsonValue))
                         return errors.New(resp.Status)
 		default:
 			log.Error("Ekam: " + resp.Status)

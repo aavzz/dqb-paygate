@@ -10,7 +10,7 @@ import (
 
 type ofd interface {
         init()
-	RegisterReceipt(pid, cid,t string, sum float32) error
+	RegisterReceipt(pid, cid, t, vat string, sum float32) error
 }
 
 var Ofd ofd
@@ -52,7 +52,7 @@ func InitOfd() {
 					case "out":
 						v.Type = "return"
 					}
- 		                      	 err := Ofd.RegisterReceipt("dqb" + fmt.Sprintf("%d", k), v.Cid, v.Type, v.Sum)
+ 		                      	 err := Ofd.RegisterReceipt("dqb" + fmt.Sprintf("%d", k), v.Cid, v.Type, v.Vat, v.Sum)
  		                      	 if err == nil {
  	      	                	         storage.Storage.SetHandledOfd(k)
  	      	                	 }
