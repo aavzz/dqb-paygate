@@ -67,7 +67,9 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 		return err
 	}
 
-	log.Info(string(jsonValue))
+	if viper.GetString("ofd.verbose") == "true" {
+		log.Info(string(jsonValue))
+	}
 
 	req, err := http.NewRequest("POST", e.url, bytes.NewBuffer(jsonValue))
 	if err != nil {
