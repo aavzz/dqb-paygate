@@ -97,8 +97,6 @@ func InitNotification() {
 							} else {
 								log.Error("Failed to get user info: " + v.Cid)
 							}
-		                                } else {
-							log.Error("Failed to get receipt info: " + v.PaymentId)
 						}
 					}
                                	}

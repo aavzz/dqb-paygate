@@ -177,7 +177,6 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                                 jsonValue, _ := json.MarshalIndent(v, "", "    ")
                                 log.Info("200" + string(jsonValue))
                         }         
-	log.Info(fmt.Sprintf("Items: %d", len(v.Items))) //XXX
 			if len(v.Items) > 0 {
 	                        return &v.Items[0]
 			} else {
