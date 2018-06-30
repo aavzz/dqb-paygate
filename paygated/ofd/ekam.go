@@ -174,7 +174,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                                         log.Error("Ekam: " + err.Error())
                                         return nil
                                 }
-                                jsonValue, error := json.MarshalIndent(v, "", "    ")
+                                jsonValue, err := json.MarshalIndent(v, "", "    ")
                                 if err != nil {          
                                         log.Error("Ekam: " + err.Error())
                                         return nil
