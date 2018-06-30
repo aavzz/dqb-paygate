@@ -42,7 +42,7 @@ func InitNotification() {
 								if ui.Email != "" {
 									addr = ui.Email
 									channel = "email"
-									channel = viper.GetString("notification.email_template"
+									channel = viper.GetString("notification.email_template")
 								}
 								if addr != "" && channel != "" && template != "" {
 									message := template
@@ -71,7 +71,7 @@ func InitNotification() {
 
 										log.Info(message) //XXX
 	
-										err := NotifyEmail(viper.GetString("notification.url"), addr,
+										err = NotifyEmail(viper.GetString("notification.url"), addr,
 												 viper.GetString("notification.email_subject"),
 												 viper.GetString("notification.email_sender_name"),
 												 viper.GetString("notification.email_sender_address"),
