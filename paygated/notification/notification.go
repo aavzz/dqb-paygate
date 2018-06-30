@@ -34,7 +34,7 @@ func InitNotification() {
 				n := storage.Storage.GetUnhandledNotification()
 				if n != nil {
 					for k, v := range n {
-						r := ofd.ReceiptInfo(v.PaymentId)
+						r := ofd.Ofd.ReceiptInfo(v.PaymentId)
 						if r != nil {
 							ui := billing.Billing.GetUserInfo(v.Cid)
 							if ui != nil {
@@ -56,10 +56,10 @@ func InitNotification() {
 										}
 										year, month, day := t.Date()
 										date := fmt.Sprintf("%s.%s.%s", day,month,year)
-										time = fmt.Sprintf("%s:%s", t.Hour(), t.Minute())
+										t := fmt.Sprintf("%s:%s", t.Hour(), t.Minute())
 
 										message = strings.Replace(message, "%DATE%", date, -1)
-										message = strings.Replace(message, "%TIME%", time, -1)
+										message = strings.Replace(message, "%TIME%", t, -1)
 										message = strings.Replace(message, "%SUM%", r.Amount, -1)
 										message = strings.Replace(message, "%EMAIL%", addr, -1)
 										message = strings.Replace(message, "%FPD%", r.FiscalData.Fpd, -1)
@@ -73,7 +73,7 @@ func InitNotification() {
 
 										log.Info(message) //XXX
 	
-										err = NotifyEmail(viper.GetString("notification.url"), addr,
+										err = notifier.NotifyEmail(viper.GetString("notification.url"), addr,
 												 viper.GetString("notification.email_subject"),
 												 viper.GetString("notification.email_sender_name"),
 												 viper.GetString("notification.email_sender_address"),
