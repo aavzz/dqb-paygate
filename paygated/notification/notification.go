@@ -44,11 +44,11 @@ func InitNotification() {
 								if ui.Email != "" {
 									addr = ui.Email
 									channel = "email"
-									channel = viper.GetString("notification.email_template")
+									template = viper.GetString("notification.email_template")
 								}
 								if addr != "" && channel != "" && template != "" {
 									message := template
-									if channel == "email"{
+									if channel == "email" {
 	
 										t, err := time.Parse(time.RFC3339, r.CreatedAt)
 										if err != nil {
