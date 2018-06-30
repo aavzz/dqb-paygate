@@ -157,6 +157,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
 
                 switch resp.StatusCode {
                 case 200, 201:
+	log.Info(e.url + "?order_id=" + pid)
                         if viper.GetString("ofd.verbose") == "true" {
                                 body, err := ioutil.ReadAll(resp.Body)
                                 if err != nil {          
