@@ -99,7 +99,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 					log.Error("Ekam: " + err.Error())
                         	        return err
                         	}
-                        	var v ResponseOkArray
+                        	var v ResponseOk
                         	if err := json.Unmarshal(body, &v); err != nil {
 					log.Error("Ekam: " + err.Error())
                                 	return err
@@ -176,8 +176,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                                 jsonValue, _ := json.MarshalIndent(v, "", "    ")
                                 log.Info("200" + string(jsonValue))
                         }         
-			if &v.Items[0] != nil {
-		log.Info("BBB") //XXX
+			if len(v.Items) > 0 {
 	                        return &v.Items[0]
 			} else {
 				return nil
