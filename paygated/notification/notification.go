@@ -35,7 +35,7 @@ func InitNotification() {
 				if n != nil {
 					for k, v := range n {
 						r := ofd.Ofd.ReceiptInfo(v.PaymentId)
-						if r != nil {
+						if r != nil && r.FiscalData.RegistrationNumber != "" {
 							ui := billing.Billing.GetUserInfo(v.Cid)
 							if ui != nil {
 								addr := ui.PhoneNumber
