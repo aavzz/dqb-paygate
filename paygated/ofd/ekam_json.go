@@ -39,7 +39,7 @@ type ResponseOkFiscalData struct {
     FactoryFnNumber    string `json:"factory_fn_number"`
     RegistrationNumber string `json:"registration_number"`
     FnExpiredPeriod    uint   `json:"fn_expired_period"`
-    FdNumber           uint   `json:"fd_number"`
+    FdNumber           string   `json:"fd_number"`
     Fpd                uint   `json:"fpd"`
     TaxSystem          string `json:"tax_system"`
     OrganizationName   string `json:"organization_name"`
