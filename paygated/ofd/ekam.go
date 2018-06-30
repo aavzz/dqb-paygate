@@ -142,7 +142,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                 return nil
         }
         req.Header.Set("X-Access-Token", e.token)
-        req.Header.Set("Content-Type", "application/json")
+        req.Header.Set("Accept", "application/json")
 
         var v ResponseOk
         c := &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}}
@@ -157,7 +157,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
 
                 switch resp.StatusCode {
                 case 200, 201:
-	log.Info(e.url + "?order_id=" + pid)
+	log.Info(e.url + "?order_id=" + pid) //XXX
                         if viper.GetString("ofd.verbose") == "true" {
                                 body, err := ioutil.ReadAll(resp.Body)
                                 if err != nil {          
