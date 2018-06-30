@@ -40,14 +40,14 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 
         switch cmd {
         case "receive":
-                p := storage.Storage.StorePayment(uuId, userId, "operator", "billing", "in", sumFloat)
+                p := storage.Storage.StorePayment(uuId.String(), userId, "operator", "billing", "in", sumFloat)
                 if p != nil {
                     w.Write([]byte("OK"))
                 } else {
                     w.Write([]byte("FAILURE"))
                 }
         case "return":
-                p := storage.Storage.StorePayment(uuId, userId, "operator", "billing", "out", sumFloat)
+                p := storage.Storage.StorePayment(uuId.String(), userId, "operator", "billing", "out", sumFloat)
                 if p != nil {
                     w.Write([]byte("OK"))
                 } else {
