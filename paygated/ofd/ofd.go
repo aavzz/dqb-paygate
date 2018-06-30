@@ -11,7 +11,7 @@ import (
 type ofd interface {
         init()
 	RegisterReceipt(pid, cid, t, vat string, sum float32) error
-	ReceiptInfo(pid) *ResponseOk
+	ReceiptInfo(pid string) *ResponseOk
 }
 
 var Ofd ofd
@@ -57,7 +57,7 @@ func InitOfd() {
  		                      	 if err == nil {
  	      	                	         storage.Storage.SetHandledOfd(k)
 						if viper.GetString("notification.url") == "" {
- 	      	                	         storage.Storage.SetHandledNotification(k)
+ 	      	                	         storage.Storage.SetHandledNotification(k, "ofd")
 						}
  	      	                	 }
 				}
