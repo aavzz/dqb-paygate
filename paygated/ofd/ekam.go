@@ -12,7 +12,6 @@ import (
 	"github.com/aavzz/dqb-paygate/paygated/billing"
 	"github.com/spf13/viper"
 	"strconv"
-	"fmt"
 )
 
 type ekam struct {
