@@ -12,7 +12,6 @@ import (
 	"regexp"
 	"strings"
 	"strconv"
-	"fmt"
 )
 
 // Handler calls the right function to send message via specified channel.

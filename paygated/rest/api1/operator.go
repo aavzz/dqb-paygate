@@ -16,12 +16,7 @@ import (
 // Handler calls the right function to send message via specified channel.
 func Operator(w http.ResponseWriter, r *http.Request) {
 
-	uuid, err := uuid.NewV4()
-	if err != nil {
-                    w.Write([]byte(err.Error()))
-		log.Error("Operator: " + err.Error())
-		return
-	}
+	uuId := uuid.NewV4()
 
         cmd := r.FormValue("uact")
         userId := r.FormValue("cid")
@@ -45,14 +40,14 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 
         switch cmd {
         case "receive":
-                p := storage.Storage.StorePayment(uuid, userId, "operator", "billing", "in", sumFloat)
+                p := storage.Storage.StorePayment(uuId, userId, "operator", "billing", "in", sumFloat)
                 if p != nil {
                     w.Write([]byte("OK"))
                 } else {
                     w.Write([]byte("FAILURE"))
                 }
         case "return":
-                p := storage.Storage.StorePayment(uuid, userId, "operator", "billing", "out", sumFloat)
+                p := storage.Storage.StorePayment(uuId, userId, "operator", "billing", "out", sumFloat)
                 if p != nil {
                     w.Write([]byte("OK"))
                 } else {
