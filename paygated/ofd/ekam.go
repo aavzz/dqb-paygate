@@ -163,7 +163,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
 
                 switch resp.StatusCode {
                 case 200, 201:
-	log.Info(req.URL.RawQuery) //XXX
+	log.Info(req.URL.String()) //XXX
                         if viper.GetString("ofd.verbose") == "true" {
                                 body, err := ioutil.ReadAll(resp.Body)
                                 if err != nil {          
