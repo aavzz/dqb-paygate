@@ -34,7 +34,7 @@ type ResponseOkLines struct {
 
 type ResponseOkFiscalData struct {
     ReceiptNumber      uint64 `json:"receipt_number"`
-    ModelNumber        string `json:"model_number"`
+    ModelNumber        uint64 `json:"model_number"`
     FactoryKktNumber   string `json:"factory_kkt_number"`
     FactoryFnNumber    string `json:"factory_fn_number"`
     RegistrationNumber string `json:"registration_number"`
