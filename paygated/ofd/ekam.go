@@ -137,7 +137,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 //ReceiptInfo sends receipt info to ekam
 func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
 
-        req, err := http.NewRequest("GET", e.url, bytes.NewBuffer("order_id=" + pid))
+        req, err := http.NewRequest("GET", e.url, bytes.NewBuffer("order_id=" + []byte(pid)))
         if err != nil {
                 log.Error("Ekam: " + err.Error())
                 return nil
