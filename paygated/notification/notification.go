@@ -71,8 +71,6 @@ func InitNotification() {
 										message = strings.Replace(message, "%INN%", r.FiscalData.OrganizationInn, -1)
 										message = strings.Replace(message, "%SENDER_EMAIL%", viper.GetString("notification.email_sender_address"), -1)
 
-										log.Info(message) //XXX
-	
 										err = notifier.NotifyEmail(viper.GetString("notification.url"), addr,
 												 viper.GetString("notification.email_subject"),
 												 viper.GetString("notification.email_sender_name"),
@@ -80,17 +78,19 @@ func InitNotification() {
 												 message)
 		         	                 	 			if err == nil {
                 	                        	         			storage.Storage.SetHandledNotification(k, addr)
-                        	                	 			}
+                        	                	 			} else {
+											elog.Info(err.Error())
+										}
 									} else {
 										message = strings.Replace(message, "%SUM%", r.Amount, -1)
 										message = strings.Replace(message, "%REG_KKT%", r.FiscalData.RegistrationNumber, -1)
 										message = strings.Replace(message, "%FPD%", r.FiscalData.Fpd, -1)
 
-										log.Info(message) //XXX
-
 										err := notifier.NotifySMS(viper.GetString("notification.url"), channel, addr, message)
                                         	 				if err == nil {
                                         	         				storage.Storage.SetHandledNotification(k, addr)
+										} else {
+											elog.Info(err.Error())
 										}
                                         	 			}
 								}
