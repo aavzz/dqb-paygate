@@ -105,7 +105,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
                                 	return err
 				}
 				jsonValue, _ := json.MarshalIndent(v, "", "    ")
-				log.Info("200" + string(jsonValue))
+				log.Info("-200-" + string(jsonValue))
                         }
 			return nil
                 case 422:  
@@ -174,7 +174,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                                         return nil
                                 }
                                 jsonValue, _ := json.MarshalIndent(v, "", "    ")
-                                log.Info("200" + string(jsonValue))
+                                log.Info("200 : " + string(jsonValue))
                         }         
 			if len(v.Items) > 0 {
 	                        return &v.Items[0]
