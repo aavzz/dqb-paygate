@@ -12,6 +12,7 @@ import (
 	"github.com/aavzz/dqb-paygate/paygated/billing"
 	"github.com/spf13/viper"
 	"strconv"
+	"fmt"
 )
 
 type ekam struct {
@@ -176,6 +177,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                                 jsonValue, _ := json.MarshalIndent(v, "", "    ")
                                 log.Info("200" + string(jsonValue))
                         }         
+	log.Info(fmt.Sprintf("Items: %d", len(v.Items))) //XXX
 			if len(v.Items) > 0 {
 	                        return &v.Items[0]
 			} else {
