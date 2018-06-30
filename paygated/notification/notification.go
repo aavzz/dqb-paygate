@@ -6,8 +6,10 @@ import (
 	"github.com/aavzz/daemon/log"
 	"github.com/aavzz/dqb-paygate/paygated/billing"
         "github.com/aavzz/dqb-paygate/paygated/storage"
+        "github.com/aavzz/dqb-paygate/paygated/ofd"
 	"strings"
 	"time"
+	"fmt"
 )
 
 //InitNotification initializes notification
@@ -53,7 +55,7 @@ func InitNotification() {
 											log.Error("Failed to parse time")
 										}
 										year, month, day := t.Date()
-										date = fmt.Sprintf("%s.%s.%s", day,month,year)
+										date := fmt.Sprintf("%s.%s.%s", day,month,year)
 										time = fmt.Sprintf("%s:%s", t.Hour(), t.Minute())
 
 										message = strings.Replace(message, "%DATE%", date, -1)
@@ -93,10 +95,10 @@ func InitNotification() {
                                         	 			}
 								}
 							} else {
-								lor.Error("Failed to get user info: " + v.Cid)
+								log.Error("Failed to get user info: " + v.Cid)
 							}
 		                                } else {
-							lor.Error("Failed to get receipt info: " + v.PaymentId)
+							log.Error("Failed to get receipt info: " + v.PaymentId)
 						}
 					}
                                	}
