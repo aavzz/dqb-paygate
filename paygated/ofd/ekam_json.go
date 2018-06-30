@@ -82,6 +82,10 @@ type ResponseOk struct {
   Error              string               `json:"error"`
 }
 
+type ResponseOkArray struct {
+	Items    []ResponseOk `json:"items"`
+}
+
 type ResponseError struct {
 	Error string `json:"error"`
 }
