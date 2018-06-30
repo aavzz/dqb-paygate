@@ -42,8 +42,8 @@ type ResponseOkFiscalData struct {
     FdNumber           uint   `json:"fd_number"`
     Fpd                uint   `json:"fpd"`
     TaxSystem          string `json:"tax_system"`
-    OrganisationName   string `json:"organization_name"`
-    OrganisationInn    string `json:"organization_inn"`
+    OrganizationName   string `json:"organization_name"`
+    OrganizationInn    string `json:"organization_inn"`
     Address            string `json:"address"`
     RetailShiftNumber  string `json:"retail_shift_number"`
     OfdName            string `json:"ofd_name"`
