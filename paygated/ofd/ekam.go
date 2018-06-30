@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"errors"
 	"bytes"
 	"io/ioutil"
@@ -136,11 +137,16 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 //ReceiptInfo sends receipt info to ekam
 func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
 
-        req, err := http.NewRequest("GET", e.url + "?order_id=" + pid, bytes.NewBuffer([]byte("")))
+        req, err := http.NewRequest("GET", e.url + "?order_id=" + pid, nil)
         if err != nil {
                 log.Error("Ekam: " + err.Error())
                 return nil
         }
+
+	q := url.Values{}
+	q.Add("order_id", pid)
+	req.URL.RawQuery = q.Encode()
+
         req.Header.Set("X-Access-Token", e.token)
         req.Header.Set("Accept", "application/json")
 
