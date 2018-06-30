@@ -86,7 +86,7 @@ func InitNotification() {
 										message = strings.Replace(message, "%REG_KKT%", r.FiscalData.RegistrationNumber, -1)
 										message = strings.Replace(message, "%FPD%", r.FiscalData.Fpd, -1)
 
-										err := notifier.NotifySMS(viper.GetString("notification.url"), channel, addr, message)
+										err := notifier.NotifySMS(viper.GetString("notification.url"), channel, "+" + addr, message)
                                         	 				if err == nil {
                                         	         				storage.Storage.SetHandledNotification(k, addr)
 										} else {
