@@ -138,6 +138,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 //ReceiptInfo sends receipt info to ekam
 func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
 
+                log.Info("Ekam: AAA") //XXX
         req, err := http.NewRequest("GET", e.url, nil)
         if err != nil {
                 log.Error("Ekam: " + err.Error())
@@ -159,12 +160,15 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                 return nil
         }
         if resp != nil {
+                log.Info("Ekam: BBB") //XXX
 
                 defer resp.Body.Close()
 
                 switch resp.StatusCode {
                 case 200, 201:
+                log.Info("Ekam: CCC") //XXX
                         if viper.GetString("ofd.verbose") == "true" {
+                log.Info("Ekam: DDD") //XXX
                                 body, err := ioutil.ReadAll(resp.Body)
                                 if err != nil {          
                                         log.Error("Ekam: " + err.Error())
@@ -181,6 +185,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                                 }
                                 log.Info("200:" + fmt.Sprintf("%d", len(v.Items)) + string(jsonValue))
                         }         
+                log.Info("Ekam: EEE") //XXX
 			if len(v.Items) > 0 {
 	                        return &v.Items[0]
 			} else {
@@ -209,5 +214,6 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                 return nil
         }
 
+                log.Info("Ekam: NNN") //XXX
         return &v.Items[0]
 }
