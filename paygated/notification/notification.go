@@ -62,10 +62,10 @@ func InitNotification() {
 										message = strings.Replace(message, "%TIME%", hm, -1)
 										message = strings.Replace(message, "%SUM%", r.Amount, -1)
 										message = strings.Replace(message, "%EMAIL%", addr, -1)
-										message = strings.Replace(message, "%FPD%", fmt.Sprintf("%d",r.FiscalData.Fpd), -1)
+										message = strings.Replace(message, "%FPD%", r.FiscalData.Fpd, -1)
 										message = strings.Replace(message, "%SHIFT%", r.FiscalData.RetailShiftNumber, -1)
 										message = strings.Replace(message, "%RECEIPT_NUM%", fmt.Sprintf("%d",r.FiscalData.ReceiptNumber), -1)
-										message = strings.Replace(message, "%FD%", fmt.Sprintf("%d",r.FiscalData.FdNumber), -1)
+										message = strings.Replace(message, "%FD%", r.FiscalData.FdNumber, -1)
 										message = strings.Replace(message, "%REG_KKT%", r.FiscalData.RegistrationNumber, -1)
 										message = strings.Replace(message, "%FN_NUM%", r.FiscalData.FactoryFnNumber, -1)
 										message = strings.Replace(message, "%INN%", r.FiscalData.OrganizationInn, -1)
@@ -84,7 +84,7 @@ func InitNotification() {
 									} else {
 										message = strings.Replace(message, "%SUM%", r.Amount, -1)
 										message = strings.Replace(message, "%REG_KKT%", r.FiscalData.RegistrationNumber, -1)
-										message = strings.Replace(message, "%FPD%", fmt.Sprintf("%d",r.FiscalData.Fpd), -1)
+										message = strings.Replace(message, "%FPD%", r.FiscalData.Fpd, -1)
 
 										log.Info(message) //XXX
 
