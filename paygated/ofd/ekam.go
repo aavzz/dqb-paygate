@@ -154,13 +154,13 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
         }
         if resp != nil {
 
-		log.Info(AAA) //XXX
+		log.Info("AAA") //XXX
                 defer resp.Body.Close()
 
                 switch resp.StatusCode {
                 case 200:
                 case 201:
-		log.Info(BBB) //XXX
+		log.Info("BBB") //XXX
                         if viper.GetString("ofd.verbose") == "true" {
                                 body, err := ioutil.ReadAll(resp.Body)
                                 if err != nil {          
@@ -176,7 +176,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                         }         
                         return &v
                 case 422:                  
-		log.Info(CCC) //XXX
+		log.Info("CCC") //XXX
                         body, err := ioutil.ReadAll(resp.Body)
                         if err != nil {
                                 log.Error(err.Error())
@@ -191,7 +191,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                         log.Info("422" + string(jsonValue))
                         return nil
                 default:
-		log.Info(DDD) //XXX
+		log.Info("DDD") //XXX
                         log.Error("Ekam: " + resp.Status)
                         return nil
                 }
