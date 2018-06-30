@@ -53,7 +53,7 @@ func InitOfd() {
 					case "out":
 						v.Type = "return"
 					}
- 		                      	 err := Ofd.RegisterReceipt("dqb" + fmt.Sprintf("%d", k), v.Cid, v.Type, v.Vat, v.Sum)
+ 		                      	 err := Ofd.RegisterReceipt(v.PaymentId, v.Cid, v.Type, v.Vat, v.Sum)
  		                      	 if err == nil {
  	      	                	         storage.Storage.SetHandledOfd(k)
 						if viper.GetString("notification.url") == "" {
