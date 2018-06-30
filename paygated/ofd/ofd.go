@@ -5,7 +5,6 @@ import (
 	"github.com/aavzz/dqb-paygate/paygated/storage"
         "time"
 	"github.com/spf13/viper"
-	"fmt"
 )
 
 type ofd interface {
