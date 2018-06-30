@@ -99,7 +99,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 					log.Error("Ekam: " + err.Error())
                         	        return err
                         	}
-                        	var v ResponseOk
+                        	var v ResponseOkArray
                         	if err := json.Unmarshal(body, &v); err != nil {
 					log.Error("Ekam: " + err.Error())
                                 	return err
