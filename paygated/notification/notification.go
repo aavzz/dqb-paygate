@@ -79,7 +79,7 @@ func InitNotification() {
 		         	                 	 			if err == nil {
                 	                        	         			storage.Storage.SetHandledNotification(k, addr)
                         	                	 			} else {
-											elog.Info(err.Error())
+											log.Info(err.Error())
 										}
 									} else {
 										message = strings.Replace(message, "%SUM%", r.Amount, -1)
@@ -90,7 +90,7 @@ func InitNotification() {
                                         	 				if err == nil {
                                         	         				storage.Storage.SetHandledNotification(k, addr)
 										} else {
-											elog.Info(err.Error())
+											log.Info(err.Error())
 										}
                                         	 			}
 								}
