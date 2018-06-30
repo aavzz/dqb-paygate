@@ -42,16 +42,16 @@ func (s *postgres) StorePayment(cpid,cid,channel,terminal,direction string, sum 
         }
         defer rows.Close()
         if !rows.Next() {
-		uuid := uuid.NewV4()
+		uuId := uuid.NewV4()
 		if cpid != "" {
-	        	_, err := s.dbh.Exec("INSERT INTO payments(channel_payment_id, payment_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction, payment_id) VALUES ($1, $2, $3, $4, $5, $6, uuid)",
+	        	_, err := s.dbh.Exec("INSERT INTO payments(channel_payment_id, payment_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction, payment_id) VALUES ($1, $2, $3, $4, $5, $6, uuId)",
                                   cpid, sum, cid, channel, terminal, direction)
 	       		if err != nil {
 				log.Error("Postgres: " + err.Error())
 				return nil
         		}
 		} else {
-	        	_, err := s.dbh.Exec("INSERT INTO payments(paymant_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction, payment_id) VALUES ($1, $2, $3, $4, $5, uuid)",
+	        	_, err := s.dbh.Exec("INSERT INTO payments(paymant_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction, payment_id) VALUES ($1, $2, $3, $4, $5, uuId)",
                                   sum, cid, channel, terminal, direction)
 	       		if err != nil {
 				log.Error("Postgres: " + err.Error())
