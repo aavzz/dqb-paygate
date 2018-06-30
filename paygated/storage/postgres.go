@@ -42,11 +42,7 @@ func (s *postgres) StorePayment(cpid,cid,channel,terminal,direction string, sum 
         }
         defer rows.Close()
         if !rows.Next() {
-		uuid, err := uuid.NewV4()
-		if err != nil {
-			log.Error("Postgres: " + err.Error())
-			return nil
-		}	
+		uuid := uuid.NewV4()
 		if cpid != "" {
 	        	_, err := s.dbh.Exec("INSERT INTO payments(channel_payment_id, payment_sum, payment_subject_id, payment_channel, channel_terminal_id, payment_direction, payment_id) VALUES ($1, $2, $3, $4, $5, $6, uuid)",
                                   cpid, sum, cid, channel, terminal, direction)
@@ -195,8 +191,8 @@ func (s *postgres) SetHandledOfd(id uint64) error {
 }
 
 //SetHandledNotification marks db record as processed
-func (s *postgres) SetHandledNotification(id uint64) error {
-        if _, err := s.dbh.Exec("UPDATE payments set tstamp_notification=current_timestamp where id=$1", id); err != nil {
+func (s *postgres) SetHandledNotification(id uint64, addr string) error {
+        if _, err := s.dbh.Exec("UPDATE payments set tstamp_notification=current_timestamp notification_sent_to=$1 where id=$2", id, addr); err != nil {
 		log.Error("Postgres: " + err.Error())
             return err
         }

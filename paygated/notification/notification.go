@@ -77,7 +77,7 @@ func InitNotification() {
 												 viper.GetString("notification.email_sender_address"),
 												 message)
 		         	                 	 			if err == nil {
-                	                        	         			storage.Storage.SetHandledNotification(k)
+                	                        	         			storage.Storage.SetHandledNotification(k, addr)
                         	                	 			}
 									} else {
 										message = strings.Replace(message, "%SUM%", r.Amount, -1)
@@ -88,7 +88,7 @@ func InitNotification() {
 
 										err := notifier.NotifySMS(viper.GetString("notification.url"), channel, addr, message)
                                         	 				if err == nil {
-                                        	         				storage.Storage.SetHandledNotification(k)
+                                        	         				storage.Storage.SetHandledNotification(k, addr)
 										}
                                         	 			}
 								}

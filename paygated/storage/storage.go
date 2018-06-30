@@ -13,7 +13,7 @@ type storage interface {
 	GetUnhandledNotification() map[uint64]Unhandled
 	SetHandledBilling(id uint64) error
 	SetHandledOfd(id uint64) error
-	SetHandledNotification(id uint64) error
+	SetHandledNotification(id uint64, addr string) error
         Shutdown() error
 }
 
