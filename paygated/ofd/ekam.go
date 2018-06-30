@@ -176,7 +176,11 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                                 jsonValue, _ := json.MarshalIndent(v, "", "    ")
                                 log.Info("200" + string(jsonValue))
                         }         
-                        return &v.Items[0]
+			if v.Items != nil {
+	                        return &v.Items[0]
+			} else {
+				return nil
+			}
                 case 422:                  
                         body, err := ioutil.ReadAll(resp.Body)
                         if err != nil {
