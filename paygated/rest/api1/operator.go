@@ -10,10 +10,18 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"github.com/satori/go.uuid"
 )
 
 // Handler calls the right function to send message via specified channel.
 func Operator(w http.ResponseWriter, r *http.Request) {
+
+	uuid, err := uuid.NewV4()
+	if err != nil {
+                    w.Write([]byte(err.Error()))
+		log.Error("Operator: " + err.Error())
+		return
+	}
 
         cmd := r.FormValue("uact")
         userId := r.FormValue("cid")
@@ -37,13 +45,15 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 
         switch cmd {
         case "receive":
-                if err := storage.Storage.StorePayment("", userId, "operator", "billing", "in", sumFloat); err == nil {
+                p := storage.Storage.StorePayment(uuid, userId, "operator", "billing", "in", sumFloat)
+                if p != nil {
                     w.Write([]byte("OK"))
                 } else {
                     w.Write([]byte("FAILURE"))
                 }
         case "return":
-                if err := storage.Storage.StorePayment("", userId, "operator", "billing", "out", sumFloat); err == nil {
+                p := storage.Storage.StorePayment(uuid, userId, "operator", "billing", "out", sumFloat)
+                if p != nil {
                     w.Write([]byte("OK"))
                 } else {
                     w.Write([]byte("FAILURE"))

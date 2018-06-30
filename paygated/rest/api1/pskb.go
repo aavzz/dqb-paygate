@@ -18,24 +18,22 @@ func Pskb(w http.ResponseWriter, r *http.Request) {
 
 	login := r.FormValue("duser")
 	pass := r.FormValue("dpass")
-
 	if login != viper.GetString("pskb.login") || pass != viper.GetString("pskb.pass") {
 		w.WriteHeader(403)
-		log.Info("Pskb: 403")
+		log.Info("Pskb: Authentivation failed")
 		return
 	}
 
-	cmd := r.FormValue("uact")
-	userId := r.FormValue("cid")
-
         w.Header().Set("Content-type", "text/html")
 
+	userId := r.FormValue("cid")
         if m, _ := regexp.MatchString("^" + viper.GetString("billing.uid_format") + "$", userId); !m {
                     w.Write([]byte("wrong uid format"))
 			log.Info("Pskb: wrong uid format")
                     return
         }
 
+	cmd := r.FormValue("uact")
 	switch cmd {
 	case "get_info":
                 ui := billing.Billing.GetUserInfo(userId)

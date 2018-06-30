@@ -18,10 +18,10 @@ import (
 // Handler calls the right function to send message via specified channel.
 func Sdm(w http.ResponseWriter, r *http.Request) {
 
-        cmd := r.FormValue("Command")
+        w.Header().Set("Content-type", "text/xml")
+
        	payId := r.FormValue("PaymentID")
         userId := r.FormValue("ClientId")
-
        	if m, _ := regexp.MatchString(`^\d+$`, payId); !m {
                    w.Write([]byte("payment id is not numeric"))
 		log.Info("Pskb: payment id is not numeric")
@@ -33,8 +33,8 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
                     return
         }
 
-        w.Header().Set("Content-type", "text/xml")
 
+        cmd := r.FormValue("Command")
         switch cmd {
         case "check":
                 ui := billing.Billing.GetUserInfo(userId)
@@ -75,9 +75,9 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("<?xml version=\"1.0\" encoding=\"windows-1251\"?>"))
 			w.Write([]byte("<Response>"))
 	        	w.Write([]byte("  <Result>0</Result>"))
-	        	w.Write([]byte("  <PaymentNumber>dqb" + fmt.Sprintf("%d", p.Number) + "</PaymentNumber>"))
+	        	w.Write([]byte("  <PaymentNumber>" + p.LocalId + "</PaymentNumber>"))
 	        	w.Write([]byte("  <PaymentId>" + payId + "</PaymentId>"))
-	        	w.Write([]byte("  <PaymentTime>" + p.Time + "</PaymentTime>"))
+	        	w.Write([]byte("  <PaymentTime>" + p.Tstamp + "</PaymentTime>"))
 	        	w.Write([]byte("  <Description>OK</Description>"))
 	        	w.Write([]byte("</Response>"))
                 } else {

@@ -30,7 +30,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 	var rcpt ReceiptRequest
 
 	ui := billing.Billing.GetUserInfo(cid)
-	if viper.GetString("notifier.url") == "" && ui != nil {
+	if viper.GetString("notification.url") == "" && ui != nil {
 		rcpt.Email = ui.Email
 		if rcpt.Email == "" {
   			rcpt.PhoneNumber = ui.PhoneNumber
@@ -134,4 +134,66 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
         return nil
 }
 
+//ReceiptInfo sends receipt info to ekam
+func (e *ekam) ReceiptInfo(pid) *ResponseOk {
 
+        req, err := http.NewRequest("GET", e.url, bytes.NewBuffer("order_id=" + pid))
+        if err != nil {
+                log.Error("Ekam: " + err.Error())
+                return nil
+        }
+        req.Header.Set("X-Access-Token", e.token)
+        req.Header.Set("Content-Type", "application/json")
+
+        var v ResponseOk
+        c := &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}}
+        resp, err := c.Do(req)
+        if err != nil {
+                log.Error("Ekam: " + err.Error())
+                return nil
+        }
+        if resp != nil {
+                defer resp.Body.Close()
+
+                switch resp.StatusCode {
+                case 200:
+                case 201:
+                        if viper.GetString("ofd.verbose") == "true" {
+                                body, err := ioutil.ReadAll(resp.Body)
+                                if err != nil {          
+                                        log.Error("Ekam: " + err.Error())
+                                        return nil
+                                }
+                                if err := json.Unmarshal(body, &v); err != nil {
+                                        log.Error("Ekam: " + err.Error())
+                                        return nil
+                                }
+                                jsonValue, _ := json.MarshalIndent(v, "", "    ")
+                                log.Info("200" + string(jsonValue))
+                        }         
+                        return &v
+                case 422:                  
+                        body, err := ioutil.ReadAll(resp.Body)
+                        if err != nil {
+                                log.Error(err.Error())
+                                return nil
+                        }
+                        var v ResponseError
+                        if err := json.Unmarshal(body, &v); err != nil {
+                                log.Error("Ekam: " + err.Error())
+                                return nil
+                        }
+                        jsonValue, _ := json.MarshalIndent(v, "", "    ")
+                        log.Info("422" + string(jsonValue))
+                        return nil
+                default:
+                        log.Error("Ekam: " + resp.Status)
+                        return nil
+                }
+        } else {
+                log.Error("Ekam: no response from ekam")
+                return nil
+        }
+
+        return &v
+}

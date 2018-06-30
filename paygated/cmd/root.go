@@ -40,6 +40,7 @@ func paygatedCommand(cmd *cobra.Command, args []string) {
 	}
 
         //initialization happens here
+	notification.InitNotification()
         billing.InitBilling()
         ofd.InitOfd()
         storage.InitStorage()

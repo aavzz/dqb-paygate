@@ -23,8 +23,7 @@ type Unhandled struct {
 }
 
 type Payment struct {
-	Number uint64
-	Time string
+	LocalId, Tstamp string
 }
 
 var Storage storage
