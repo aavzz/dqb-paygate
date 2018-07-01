@@ -71,6 +71,7 @@ func InitNotification() {
 						continue
 					}
 					if ui.Type == "ul" {
+                               	         	storage.Storage.SetHandledNotification(k, "ul")
 						continue
 					}
 					addr := ui.PhoneNumber
