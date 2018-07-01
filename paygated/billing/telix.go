@@ -106,7 +106,7 @@ func (b *telix) StorePayment(pid, cid, channel, dir string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
         }
-	var resilt sql.Result
+	var result sql.Result
 	if dir == "in" {
 		result, err = t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES (?,?,?,current_timestamp,?)", pid,sum,cid,channel)
 	} else {
