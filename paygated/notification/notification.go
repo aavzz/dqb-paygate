@@ -55,8 +55,8 @@ func InitNotification() {
 											log.Error("Failed to parse time")
 										}
 										year, month, day := t.Date()
-										date := fmt.Sprintf("%2d.%2d.%4d", day,month,year)
-										hm := fmt.Sprintf("%2d:%2d", t.Hour(), t.Minute())
+										date := fmt.Sprintf("%02d.%02d.%d", day,month,year)
+										hm := fmt.Sprintf("%02d:%02d", t.Hour(), t.Minute())
 
 										message = strings.Replace(message, "%DATE%", date, -1)
 										message = strings.Replace(message, "%TIME%", hm, -1)
