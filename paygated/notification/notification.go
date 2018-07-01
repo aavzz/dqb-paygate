@@ -103,6 +103,7 @@ func InitNotification() {
 							receiptType = "Возврат прихода"
 						}
 
+						message = strings.Replace(message, "%CONTRACT%", v.Cid, -1)
 						message = strings.Replace(message, "%DATE%", date, -1)
 						message = strings.Replace(message, "%TIME%", hm, -1)
 						message = strings.Replace(message, "%ZONE%", tz, -1)
