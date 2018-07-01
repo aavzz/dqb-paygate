@@ -98,6 +98,11 @@ func InitNotification() {
 						hm := fmt.Sprintf("%02d:%02d", t.Hour(), t.Minute())
 						tz, _ := t.Zone()
 
+						receiptType := "Приход"
+						if r.Type == 'ReturnReceiptRequest' {
+							receiptType = "Возврат прихода"
+						}
+
 						message = strings.Replace(message, "%DATE%", date, -1)
 						message = strings.Replace(message, "%TIME%", hm, -1)
 						message = strings.Replace(message, "%ZONE%", tz, -1)
@@ -107,6 +112,7 @@ func InitNotification() {
 						message = strings.Replace(message, "%SHIFT%", r.FiscalData.RetailShiftNumber, -1)
 						message = strings.Replace(message, "%RECEIPT_NUM%", fmt.Sprintf("%d",r.FiscalData.ReceiptNumber), -1)
 						message = strings.Replace(message, "%FD%", r.FiscalData.FdNumber, -1)
+						message = strings.Replace(message, "%RECEIPT_TYPE%", receiptType, -1)
 						message = strings.Replace(message, "%REG_KKT%", r.FiscalData.RegistrationNumber, -1)
 						message = strings.Replace(message, "%FN_NUM%", r.FiscalData.FactoryFnNumber, -1)
 						message = strings.Replace(message, "%INN%", r.FiscalData.OrganizationInn, -1)

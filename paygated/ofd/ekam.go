@@ -65,7 +65,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 	}
   	rcpt.Lines = append(rcpt.Lines, rcptLines)
 
-	jsonValue, err := json.MarshalIndent(rcpt, "", "    ")
+	jsonValue, err := json.Marshal(rcpt)
 	if err != nil {
 		log.Error("Ekam: " + err.Error())
 		return err
@@ -105,7 +105,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 					log.Error("Ekam: " + err.Error())
                                 	return err
 				}
-				jsonValue, _ := json.MarshalIndent(v, "", "    ")
+				jsonValue, _ := json.Marshal(v)
 				log.Info("-200-" + string(jsonValue))
                         }
 			return nil
@@ -120,7 +120,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 				log.Error("Ekam: " + err.Error())
                                 return err
                         }
-			jsonValue, _ := json.MarshalIndent(v, "", "    ")
+			jsonValue, _ := json.Marshal(v)
 			log.Info("422" + string(jsonValue))
                         return errors.New(resp.Status)
 		default:
@@ -174,7 +174,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                                         log.Error("Ekam: " + err.Error())
                                         return nil
                                 }
-                                jsonValue, err := json.MarshalIndent(v, "", "    ")
+                                jsonValue, err := json.Marshal(v)
                                 if err != nil {          
                                         log.Error("Ekam: " + err.Error())
                                         return nil
@@ -197,7 +197,7 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                                 log.Error("Ekam: " + err.Error())
                                 return nil
                         }
-                        jsonValue, _ := json.MarshalIndent(v, "", "    ")
+                        jsonValue, _ := json.Marshal(v)
                         log.Info("422" + string(jsonValue))
                         return nil
                 default:
