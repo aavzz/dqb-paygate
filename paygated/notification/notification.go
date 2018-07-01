@@ -86,39 +86,39 @@ func InitNotification() {
 						continue
 					}
 					message := template
+
+					t, err := time.Parse(time.RFC3339, r.CreatedAt)
+					t = t.Local()
+					if err != nil {
+						log.Error("Failed to parse time")
+					}
+					year, month, day := t.Date()
+					date := fmt.Sprintf("%02d.%02d.%d", day,month,year)
+					hm := fmt.Sprintf("%02d:%02d", t.Hour(), t.Minute())
+					tz, _ := t.Zone()
+
+					receiptType := "Приход"
+					if r.Type == "ReturnReceiptRequest" {
+						receiptType = "Возврат прихода"
+					}
+
+					message = strings.Replace(message, "%CONTRACT%", v.Cid, -1)
+					message = strings.Replace(message, "%DATE%", date, -1)
+					message = strings.Replace(message, "%TIME%", hm, -1)
+					message = strings.Replace(message, "%ZONE%", tz, -1)
+					message = strings.Replace(message, "%SUM%", r.Amount, -1)
+					message = strings.Replace(message, "%FPD%", r.FiscalData.Fpd, -1)
+					message = strings.Replace(message, "%RECEIPT_TYPE%", receiptType, -1)
+					message = strings.Replace(message, "%REG_KKT%", r.FiscalData.RegistrationNumber, -1)
+
 					if channel == "email" {
-
-						t, err := time.Parse(time.RFC3339, r.CreatedAt)
-						t = t.Local()
-						if err != nil {
-							log.Error("Failed to parse time")
-						}
-						year, month, day := t.Date()
-						date := fmt.Sprintf("%02d.%02d.%d", day,month,year)
-						hm := fmt.Sprintf("%02d:%02d", t.Hour(), t.Minute())
-						tz, _ := t.Zone()
-
-						receiptType := "Приход"
-						if r.Type == "ReturnReceiptRequest" {
-							receiptType = "Возврат прихода"
-						}
-
-						message = strings.Replace(message, "%CONTRACT%", v.Cid, -1)
-						message = strings.Replace(message, "%DATE%", date, -1)
-						message = strings.Replace(message, "%TIME%", hm, -1)
-						message = strings.Replace(message, "%ZONE%", tz, -1)
-						message = strings.Replace(message, "%SUM%", r.Amount, -1)
 						message = strings.Replace(message, "%EMAIL%", addr, -1)
-						message = strings.Replace(message, "%FPD%", r.FiscalData.Fpd, -1)
 						message = strings.Replace(message, "%SHIFT%", r.FiscalData.RetailShiftNumber, -1)
 						message = strings.Replace(message, "%RECEIPT_NUM%", fmt.Sprintf("%d",r.FiscalData.ReceiptNumber), -1)
 						message = strings.Replace(message, "%FD%", r.FiscalData.FdNumber, -1)
-						message = strings.Replace(message, "%RECEIPT_TYPE%", receiptType, -1)
-						message = strings.Replace(message, "%REG_KKT%", r.FiscalData.RegistrationNumber, -1)
 						message = strings.Replace(message, "%FN_NUM%", r.FiscalData.FactoryFnNumber, -1)
 						message = strings.Replace(message, "%INN%", r.FiscalData.OrganizationInn, -1)
 						message = strings.Replace(message, "%SENDER_EMAIL%", viper.GetString("notification.email_sender_address"), -1)
-
 						err = notifier.NotifyEmail(viper.GetString("notification.url"), addr,
 								 viper.GetString("notification.email_subject"),
 								 viper.GetString("notification.email_sender_name"),
@@ -130,15 +130,6 @@ func InitNotification() {
 							log.Info(err.Error())
 						}
 					} else {
-						message = strings.Replace(message, "%CONTRACT%", v.Cid, -1)
-						message = strings.Replace(message, "%DATE%", date, -1)
-						message = strings.Replace(message, "%TIME%", hm, -1)
-						message = strings.Replace(message, "%ZONE%", tz, -1)
-						message = strings.Replace(message, "%RECEIPT_TYPE%", receiptType, -1)
-						message = strings.Replace(message, "%SUM%", r.Amount, -1)
-						message = strings.Replace(message, "%REG_KKT%", r.FiscalData.RegistrationNumber, -1)
-						message = strings.Replace(message, "%FPD%", r.FiscalData.Fpd, -1)
-
 						err := notifier.NotifySMS(viper.GetString("notification.url"), channel, "+" + addr, message)
                	 				if err == nil {
                	         				storage.Storage.SetHandledNotification(k, addr)
