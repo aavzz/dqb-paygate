@@ -71,7 +71,7 @@ func paygatedCommand(cmd *cobra.Command, args []string) {
 
 // Execute starts paygated execution
 func Execute() {
-	paygated.Flags().StringP("config", "c", "/etc/paygated.conf", "configuration file")
+	paygated.Flags().StringP("config", "c", "/etc/paygate/paygated.conf", "configuration file")
 	paygated.Flags().StringP("pidfile", "p", "/var/run/paygated.pid", "process ID file")
 	paygated.Flags().StringP("address", "a", "127.0.0.1:8084", "address and port to bind to")
 	paygated.Flags().BoolP("daemonize", "d", false, "run as a daemon (default false)")

@@ -10,7 +10,14 @@ import (
 	"strings"
 	"time"
 	"fmt"
+	"io/ioutil"
 )
+
+type notification struct {
+	emailTemplate, smsTemplate string
+}
+
+var nn notification
 
 //InitNotification initializes notification
 func InitNotification() {
@@ -26,6 +33,23 @@ func InitNotification() {
 		if viper.GetString("notification.email_sender_address") == "" {
 			log.Fatal("Notification: email_sender_address is not set")
 		}
+		if viper.GetString("notification.sms_template") == "" {
+			log.Fatal("Notification: sms_template is not set")
+		}
+		if viper.GetString("notification.email_template") == "" {
+			log.Fatal("Notification: email_template is not set")
+		}
+		t, err := ioutil.ReadFile(viper.GetString("notification.sms_template"))
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		nn.smsTemplate = string(t)
+
+		t, err = ioutil.ReadFile(viper.GetString("notification.email_template"))
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		nn.emailTemplate = string(t)
 
 	        go func() {
 			for {
@@ -40,13 +64,13 @@ func InitNotification() {
 							if ui != nil {
 								addr := ui.PhoneNumber
 								channel := viper.GetString("notification.sms_channel")
-								template := viper.GetString("notification.sms_template")
+								template := nn.smsTemplate
 								if ui.Email != "" {
 									addr = ui.Email
 									channel = "email"
-									template = viper.GetString("notification.email_template")
+									template = nn.emailTemplate
 								}
-								if addr != "" && channel != "" && template != "" {
+								if addr != "" && channel != "" {
 									message := template
 									if channel == "email" {
 	
