@@ -51,8 +51,6 @@ func InitNotification() {
 		}
 		nn.emailTemplate = string(t)
 
-log.Info(nn.emailTemplate) //XXX
-
 	        go func() {
 			for {
 				time.Sleep(10 * time.Second)
