@@ -16,11 +16,20 @@ import (
 // Handler calls the right function to send message via specified channel.
 func Operator(w http.ResponseWriter, r *http.Request) {
 
+	login := r.FormValue("duser")
+        pass := r.FormValue("dpass")
+        if login != viper.GetString("operator.login") || pass != viper.GetString("operator.pass") {
+                w.WriteHeader(403)
+                log.Info("Operator: Authentivation failed")
+                return
+        }
+
 	uuId := uuid.NewV4()
 
         cmd := r.FormValue("uact")
         userId := r.FormValue("cid")
         sum := r.FormValue("sum")
+        agent := r.FormValue("agent")
 
         if m, _ := regexp.MatchString(`^\d+\.\d\d$`, sum); !m {
                     w.Write([]byte("wrong sum format"))
@@ -40,7 +49,7 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 
         switch cmd {
         case "receive":
-                p := storage.Storage.StorePayment(uuId.String(), userId, "operator", "billing", "in", sumFloat)
+                p := storage.Storage.StorePayment(uuId.String(), userId, "operator", agent, "in", sumFloat)
                 if p != nil {
                     w.Write([]byte("OK"))
                 } else {
