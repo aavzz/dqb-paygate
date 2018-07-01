@@ -50,16 +50,19 @@ func InitNotification() {
 									message := template
 									if channel == "email" {
 	
-										t, err := time.Parse(time.RFC3339, r.CreatedAt)
+										t, err := time.Parse(time.RFC3339, r.CreatedAt).Local()
 										if err != nil {
 											log.Error("Failed to parse time")
 										}
 										year, month, day := t.Date()
 										date := fmt.Sprintf("%02d.%02d.%d", day,month,year)
 										hm := fmt.Sprintf("%02d:%02d", t.Hour(), t.Minute())
+										_, tz := t.Zone()
+										zone := fmt.Sprintf("%+02d", (tz/3600))
 
 										message = strings.Replace(message, "%DATE%", date, -1)
 										message = strings.Replace(message, "%TIME%", hm, -1)
+										message = strings.Replace(message, "%ZONE%", zone, -1)
 										message = strings.Replace(message, "%SUM%", r.Amount, -1)
 										message = strings.Replace(message, "%EMAIL%", addr, -1)
 										message = strings.Replace(message, "%FPD%", r.FiscalData.Fpd, -1)
