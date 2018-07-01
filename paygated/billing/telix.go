@@ -32,7 +32,7 @@ func (b *telix) init() {
 //GetUserInfo checks if a given user exists
 func (b *telix) GetUserInfo(cid string) *UserInfo {
 
-	rows, err := b.dbh.Query("SELECT COALESCE(phone, '') phone, COALESCE(mail, '') mail FROM contract WHERE cid=?", cid)
+	rows, err := b.dbh.Query("SELECT COALESCE(phone, '') phone, COALESCE(mail, '') mail, subject FROM contract WHERE cid=?", cid)
         if err != nil {
 		log.Error("Telix: " + err.Error() + ": " + cid)
 		return nil
@@ -43,10 +43,18 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
 		return nil
 	}
 	var ui UserInfo
-        if err := rows.Scan(&ui.PhoneNumber, &ui.Email); err != nil {
+	var subj uint8
+        if err := rows.Scan(&ui.PhoneNumber, &ui.Email, &subj); err != nil {
 	    log.Error("Telix: " + err.Error() + ": " + cid)
             return nil
         }
+
+	switch subj {
+	case 1:
+		ui.Type="fl"
+	case 2:
+		ui.Type="ul"
+	}
 
 	//Normalize phone number (remove all non-digits)
         reg, err := regexp.Compile(`[^\d]`)

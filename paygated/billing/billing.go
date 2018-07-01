@@ -15,7 +15,7 @@ type billing interface {
 }
 
 type UserInfo struct{
-	Email, PhoneNumber string
+	Email, PhoneNumber, Type string
 }
 
 var Billing billing
