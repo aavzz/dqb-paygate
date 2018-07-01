@@ -6,6 +6,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
 	"github.com/satori/go.uuid"
+	"strconv"
 )
 
 
@@ -95,15 +96,18 @@ func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
         for rows.Next() {
 
             var id uint64
-            var sum float32
+            var sum string
             var channel,cid,pid,t,vat string
             if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&t,&vat); err != nil {
 		log.Error("Postgres: " + err.Error())
                 return nil
             }
+	value, _ := strconv.ParseFloat(sum, 32)
+                sumFloat := float32(value)
+
 		m[id] = Unhandled{
 			Cid: cid,
-			Sum: sum,
+			Sum: sumFloat,
 			PaymentId: pid,
 			Vat: vat,
 			Channel: channel,
@@ -125,15 +129,17 @@ func (s *postgres) GetUnhandledOfd() map[uint64]Unhandled {
         for rows.Next() {
 
             var id uint64
-            var sum float32
+            var sum string
             var channel,cid,pid,t,vat string
             if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&t,&vat); err != nil {
 		log.Error("Postgres: " + err.Error())
                 return nil
             }
+	value, _ := strconv.ParseFloat(sum, 32)
+                sumFloat := float32(value)
 		m[id] = Unhandled{
 			Cid: cid,
-			Sum: sum,
+			Sum: sumfloat,
 			PaymentId: pid,
 			Vat: vat,
 			Channel: channel,
@@ -155,15 +161,17 @@ func (s *postgres) GetUnhandledNotification() map[uint64]Unhandled {
         for rows.Next() {
 
             var id uint64
-            var sum float32
+            var sum string
             var channel,cid,pid,t,vat string
             if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&t,&vat); err != nil {
 		log.Error("Postgres: " + err.Error())
                 return nil
             }
+	value, _ := strconv.ParseFloat(sum, 32)
+                sumFloat := float32(value)
 		m[id] = Unhandled{
 			Cid: cid,
-			Sum: sum,
+			Sum: sumFloat,
 			PaymentId: pid,
 			Vat: vat,
 			Channel: channel,
