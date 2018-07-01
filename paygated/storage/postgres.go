@@ -139,7 +139,7 @@ func (s *postgres) GetUnhandledOfd() map[uint64]Unhandled {
                 sumFloat := float32(value)
 		m[id] = Unhandled{
 			Cid: cid,
-			Sum: sumfloat,
+			Sum: sumFloat,
 			PaymentId: pid,
 			Vat: vat,
 			Channel: channel,
