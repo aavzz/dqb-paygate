@@ -164,21 +164,21 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
 
                 switch resp.StatusCode {
                 case 200, 201:
+                        body, err := ioutil.ReadAll(resp.Body)
+                        if err != nil {          
+                                log.Error("Ekam: " + err.Error())
+                                return nil
+                        }
+                        if err := json.Unmarshal(body, &v); err != nil {
+                                log.Error("Ekam: " + err.Error())
+                                return nil
+                        }
+                        jsonValue, err := json.Marshal(v)
+                        if err != nil {          
+                                log.Error("Ekam: " + err.Error())
+                                return nil
+                        }
                         if viper.GetString("ofd.verbose") == "true" {
-                                body, err := ioutil.ReadAll(resp.Body)
-                                if err != nil {          
-                                        log.Error("Ekam: " + err.Error())
-                                        return nil
-                                }
-                                if err := json.Unmarshal(body, &v); err != nil {
-                                        log.Error("Ekam: " + err.Error())
-                                        return nil
-                                }
-                                jsonValue, err := json.Marshal(v)
-                                if err != nil {          
-                                        log.Error("Ekam: " + err.Error())
-                                        return nil
-                                }
                                 log.Info("200:" + fmt.Sprintf("%d", len(v.Items)) + string(jsonValue))
                         }         
 			if len(v.Items) > 0 {
