@@ -59,7 +59,7 @@ func InitNotification() {
 										date := fmt.Sprintf("%02d.%02d.%d", day,month,year)
 										hm := fmt.Sprintf("%02d:%02d", t.Hour(), t.Minute())
 										_, tz := t.Zone()
-										zone := fmt.Sprintf("%02+d", (tz/3600))
+										zone := fmt.Sprintf("%03+d", (tz/3600))
 
 										message = strings.Replace(message, "%DATE%", date, -1)
 										message = strings.Replace(message, "%TIME%", hm, -1)
