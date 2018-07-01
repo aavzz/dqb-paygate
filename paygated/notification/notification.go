@@ -130,6 +130,11 @@ func InitNotification() {
 							log.Info(err.Error())
 						}
 					} else {
+						message = strings.Replace(message, "%CONTRACT%", v.Cid, -1)
+						message = strings.Replace(message, "%DATE%", date, -1)
+						message = strings.Replace(message, "%TIME%", hm, -1)
+						message = strings.Replace(message, "%ZONE%", tz, -1)
+						message = strings.Replace(message, "%RECEIPT_TYPE%", receiptType, -1)
 						message = strings.Replace(message, "%SUM%", r.Amount, -1)
 						message = strings.Replace(message, "%REG_KKT%", r.FiscalData.RegistrationNumber, -1)
 						message = strings.Replace(message, "%FPD%", r.FiscalData.Fpd, -1)
