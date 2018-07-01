@@ -60,12 +60,12 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 			log.Info("Pskb: terminal is not numeric")	
                     return
         	}
-        	if m, _ := regexp.MatchString(`^\d+,\d\d$`, sum); !m {
+		sum = strings.Replace(sum, ",", ".", -1)
+        	if m, _ := regexp.MatchString(`^\d+\.\d\d$`, sum); !m {
                     w.Write([]byte("wrong sum format"))
 			log.Info("Pskb: wrong sum format")	
                     return
         	}
-		sum = strings.Replace(sum, ",", ".", -1)
 		value, _ := strconv.ParseFloat(sum, 32)
         	sumFloat := float32(value)  
         	if sumFloat < 0.01 {
