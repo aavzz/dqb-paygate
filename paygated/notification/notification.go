@@ -50,7 +50,8 @@ func InitNotification() {
 									message := template
 									if channel == "email" {
 	
-										t, err := time.Parse(time.RFC3339, r.CreatedAt).Local()
+										t, err := time.Parse(time.RFC3339, r.CreatedAt)
+										t = t.Local()
 										if err != nil {
 											log.Error("Failed to parse time")
 										}
