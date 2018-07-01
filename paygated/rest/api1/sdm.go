@@ -54,7 +54,7 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
                 }
         case "payment":
         	terminal := r.FormValue("TerminalId")
-        	sum := r.FormValue("Ammount")
+        	sum := r.FormValue("Amount")
         	if m, _ := regexp.MatchString(`^\d+$`, terminal); !m {
                     w.Write([]byte("terminal is not numeric"))
 			log.Info("Pskb: terminal is not numeric")	
