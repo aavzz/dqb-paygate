@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/satori/go.uuid"
 	"strconv"
+	"strings"
 )
 
 
@@ -102,6 +103,7 @@ func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
 		log.Error("Postgres: " + err.Error())
                 return nil
             }
+        sum = strings.Replace(sum, "$", "", -1)
 	value, _ := strconv.ParseFloat(sum, 32)
                 sumFloat := float32(value)
 
@@ -135,6 +137,7 @@ func (s *postgres) GetUnhandledOfd() map[uint64]Unhandled {
 		log.Error("Postgres: " + err.Error())
                 return nil
             }
+        sum = strings.Replace(sum, "$", "", -1)
 	value, _ := strconv.ParseFloat(sum, 32)
                 sumFloat := float32(value)
 		m[id] = Unhandled{
@@ -167,6 +170,7 @@ func (s *postgres) GetUnhandledNotification() map[uint64]Unhandled {
 		log.Error("Postgres: " + err.Error())
                 return nil
             }
+        sum = strings.Replace(sum, "$", "", -1)
 	value, _ := strconv.ParseFloat(sum, 32)
                 sumFloat := float32(value)
 		m[id] = Unhandled{
