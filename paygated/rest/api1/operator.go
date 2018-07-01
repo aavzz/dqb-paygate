@@ -16,6 +16,8 @@ import (
 // Handler calls the right function to send message via specified channel.
 func Operator(w http.ResponseWriter, r *http.Request) {
 
+        w.Header().Set("Content-type", "text/json")
+
 	login := r.FormValue("duser")
         pass := r.FormValue("dpass")
         if login != viper.GetString("operator.login") || pass != viper.GetString("operator.pass") {
@@ -50,7 +52,6 @@ func Operator(w http.ResponseWriter, r *http.Request) {
                     return
         }
 
-        w.Header().Set("Content-type", "text/json")
 
         switch cmd {
         case "receive":

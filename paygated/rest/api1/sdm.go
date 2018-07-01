@@ -19,7 +19,7 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 
         w.Header().Set("Content-type", "text/xml")
 
-       	payId := r.FormValue("PaymentID")
+       	payId := r.FormValue("PaymentId")
         userId := r.FormValue("ClientId")
        	if m, _ := regexp.MatchString(`^\d+$`, payId); !m {
                    w.Write([]byte("payment id is not numeric"))
