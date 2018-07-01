@@ -61,7 +61,7 @@ func InitNotification() {
 										_, tz := t.Zone()
 										zone := "00"
 										if tz > 0 {
-											zone = fmt.Sprintf("+%02d", (tz/3600))
+											zone = fmt.Sprintf("+ %02d", (tz/3600))
 										} else if tz < 0 {
 											zone = fmt.Sprintf("-%02d", (tz/3600))
 										}
