@@ -1,6 +1,7 @@
-
-Чек на сумму %SUM% р.
+%RECEIPT_TYPE% %SUM% р. по договору %CONTRACT% 
+%DATE% %TIME% (%ZONE%)  
+РН ККТ  %REG_KKT% 
+ФП %FPD%
 https://ofd-ya.ru/check
-Рег.№ ККТ: %REG_KKT%
-ФП: %FPD%
-
+Для получения чека на e-mail необходимо отправить Ваш e-mail по смс на
+номер 9718
