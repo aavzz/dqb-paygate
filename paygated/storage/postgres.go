@@ -86,7 +86,7 @@ func (s *postgres) StorePayment(cpid,cid,channel,terminal,direction string, sum 
 //GetUnhandledBilling gets unprocessed db records
 func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
 	m := make(map[uint64]Unhandled)
-	rows, err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, payment_id, payment_channel, payment_vat FROM payments WHERE tstamp_billing is null")
+	rows, err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, payment_id, payment_channel, payment_direction, payment_vat FROM payments WHERE tstamp_billing is null")
         if err != nil {
 		log.Error("Postgres: " + err.Error())
             return nil
@@ -96,8 +96,8 @@ func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
 
             var id uint64
             var sum float32
-            var channel,cid,pid,vat string
-            if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&vat); err != nil {
+            var channel,cid,pid,t,vat string
+            if err := rows.Scan(&id,&cid,&sum,&pid,&channel,&t,&vat); err != nil {
 		log.Error("Postgres: " + err.Error())
                 return nil
             }
@@ -107,6 +107,7 @@ func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
 			PaymentId: pid,
 			Vat: vat,
 			Channel: channel,
+			Type: t,
 		}
         }
         return m

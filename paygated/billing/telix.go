@@ -86,7 +86,7 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
 }
 
 //StorePayment stores payment and checks if it has really been stored
-func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
+func (b *telix) StorePayment(pid, cid, channel, t string, sum float32) error {
 
         //silently ignore double insertion attempts
 	rows, err := b.dbh.Query("SELECT cid FROM payments WHERE agent=? AND trans=?", channel, pid)
@@ -106,7 +106,11 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		log.Error("Telix: " + err.Error())
 		return err
         }
-	result, err := t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES (?,?,?,current_timestamp,?)", pid,sum,cid,channel)
+	if t == "in" {
+		result, err := t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES (?,?,?,current_timestamp,?)", pid,sum,cid,channel)
+	} else {
+		result, err := t.Exec("INSERT INTO payments(trans, sum, cid, time, agent) VALUES (?,?,?,current_timestamp,?)", pid,sum * -1 ,cid,channel)
+	}
 	if err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
@@ -132,7 +136,11 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		}
 		return errors.New("Had to rollback")
 	}
-	result, err = t.Exec("UPDATE contract SET balance=balance+? where cid=?", sum, cid)
+	if t == "in" {
+		result, err = t.Exec("UPDATE contract SET balance=balance+? where cid=?", sum, cid)
+	} else {
+		result, err = t.Exec("UPDATE contract SET balance=balance+? where cid=?", sum * -1, cid)
+	}
 	if err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
@@ -158,7 +166,12 @@ func (b *telix) StorePayment(pid, cid, channel string, sum float32) error {
 		}
 		return errors.New("Had to rollback")
 	}
-	if _, err = t.Exec("UPDATE contract SET active=1 where cid=? AND balance>0 AND (active!=2 and active!=3 and active!=10)", cid); err != nil {
+	if t == "in" {
+		_, err = t.Exec("UPDATE contract SET active=1 where cid=? AND balance>0 AND (active!=2 and active!=3 and active!=10)", cid)
+	} else {
+		_, err = t.Exec("UPDATE contract SET active=0 where cid=? AND balance<=0 AND (active!=2 and active!=3 and active!=10)", cid)
+	}
+	if err != nil {
 		if err := t.Rollback(); err != nil {
 			log.Error("Telix: " + err.Error())
 			return err

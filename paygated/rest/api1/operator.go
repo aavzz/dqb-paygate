@@ -36,6 +36,11 @@ func Operator(w http.ResponseWriter, r *http.Request) {
 			log.Info("Operator: wrong sum format")
                     return
         }
+        if sum < 0.01 {
+                    w.Write([]byte("wrong sum"))
+			log.Info("Operator: wrong sum")
+                    return
+        }
         if m, _ := regexp.MatchString("^" + viper.GetString("billing.uid_format") + "$", userId); !m {
                     w.Write([]byte("wrong uid format"))
 			log.Info("Operator: wrong uid format")

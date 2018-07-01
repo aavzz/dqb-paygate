@@ -10,7 +10,7 @@ import (
 type billing interface {
 	init()
 	GetUserInfo(cid string) *UserInfo
-	StorePayment(pid,cid,channel string, sum float32) error
+	StorePayment(pid,cid,channel,t string, sum float32) error
 	Shutdown() error
 }
 
@@ -46,7 +46,7 @@ func InitBilling() {
 		        s := storage.Storage.GetUnhandledBilling()
 			if s != nil {
 				for k, v := range s { 
-                			err := Billing.StorePayment(v.PaymentId, v.Cid, v.Channel, v.Sum)
+                			err := Billing.StorePayment(v.PaymentId, v.Cid, v.Channel, v.Type, v.Sum)
         				if err == nil {
 						storage.Storage.SetHandledBilling(k)
 					}
