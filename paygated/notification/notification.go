@@ -99,7 +99,7 @@ func InitNotification() {
 						tz, _ := t.Zone()
 
 						receiptType := "Приход"
-						if r.Type == 'ReturnReceiptRequest' {
+						if r.Type == "ReturnReceiptRequest" {
 							receiptType = "Возврат прихода"
 						}
 
