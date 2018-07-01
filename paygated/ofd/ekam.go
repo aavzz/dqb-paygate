@@ -209,5 +209,5 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                 return nil
         }
 
-        return null
+        return nil
 }
