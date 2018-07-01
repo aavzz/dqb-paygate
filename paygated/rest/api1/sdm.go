@@ -65,14 +65,14 @@ func Sdm(w http.ResponseWriter, r *http.Request) {
 			log.Info("Pskb: wrong sum format")	
                     return
         	}
-        	if sum < 0.01 {
+		sum = strings.Replace(sum, ",", ".", -1)
+		value, _ := strconv.ParseFloat(sum, 32)
+        	sumFloat := float32(value)  
+        	if sumFloat < 0.01 {
                     w.Write([]byte("wrong sum"))
 			log.Info("Pskb: wrong sum")	
                     return
         	}
-		sum = strings.Replace(sum, ",", ".", -1)
-		value, _ := strconv.ParseFloat(sum, 32)
-        	sumFloat := float32(value)  
 
                 p := storage.Storage.StorePayment(payId, userId, "sdm", terminal, "in", sumFloat)
                 if p != nil {
