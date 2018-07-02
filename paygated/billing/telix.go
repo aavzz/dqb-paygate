@@ -59,7 +59,7 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
 	}
 
 	arr := strings.Split(phone, ",")
-	for i := range arr {
+	for _, i := range arr {
 
 		//Normalize phone number (remove all non-digits)
         	reg, err := regexp.Compile(`[^\d]`)
@@ -90,7 +90,7 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
 
 
 	arr := strings.Split(email, ",")
-	for i := range arr {
+	for _, i := range arr {
 		if m, _ := regexp.MatchString(`^.+@.+\..+$`, i); !m {
 			if i != "" {
 				log.Error("Junk email: " + i + "(" + cid + ")");
