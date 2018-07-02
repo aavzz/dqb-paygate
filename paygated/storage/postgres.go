@@ -104,6 +104,7 @@ func (s *postgres) GetUnhandledBilling() map[uint64]Unhandled {
                 return nil
             }
         sum = strings.Replace(sum, "$", "", -1)
+        sum = strings.Replace(sum, ",", "", -1)
 	value, _ := strconv.ParseFloat(sum, 32)
                 sumFloat := float32(value)
 
@@ -138,6 +139,7 @@ func (s *postgres) GetUnhandledOfd() map[uint64]Unhandled {
                 return nil
             }
         sum = strings.Replace(sum, "$", "", -1)
+        sum = strings.Replace(sum, ",", "", -1)
 	value, _ := strconv.ParseFloat(sum, 32)
                 sumFloat := float32(value)
 		m[id] = Unhandled{
@@ -171,6 +173,7 @@ func (s *postgres) GetUnhandledNotification() map[uint64]Unhandled {
                 return nil
             }
         sum = strings.Replace(sum, "$", "", -1)
+        sum = strings.Replace(sum, ",", "", -1)
 	value, _ := strconv.ParseFloat(sum, 32)
                 sumFloat := float32(value)
 		m[id] = Unhandled{
