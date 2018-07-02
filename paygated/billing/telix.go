@@ -81,15 +81,8 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
 		}
 
 	}
-       	reg, err := regexp.Compile(`,+$`)
-       	if err != nil {
-       	        log.Error("Telix: " + err.Error())
-		return nil
-       	}
-       	ui.PhoneNumber = reg.ReplaceAllString(ui.PhoneNumber, "")
 
-
-	arr := strings.Split(email, ",")
+	arr = strings.Split(email, ",")
 	for _, i := range arr {
 		if m, _ := regexp.MatchString(`^.+@.+\..+$`, i); !m {
 			if i != "" {
@@ -102,11 +95,13 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
 			ui.Email = ui.Email + ",+" + i
 		}
 	}
+
        	reg, err := regexp.Compile(`,+$`)
        	if err != nil {
        	        log.Error("Telix: " + err.Error())
 		return nil
        	}
+       	ui.PhoneNumber = reg.ReplaceAllString(ui.PhoneNumber, "")
        	ui.Email = reg.ReplaceAllString(ui.Email, "")
 
 	log.Info("UserData: " + ui.Email + " " + ui.PhoneNumber) //XXX
