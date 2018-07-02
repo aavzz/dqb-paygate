@@ -104,8 +104,6 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
        	ui.PhoneNumber = reg.ReplaceAllString(ui.PhoneNumber, "")
        	ui.Email = reg.ReplaceAllString(ui.Email, "")
 
-	log.Info("UserData: " + ui.Email + " " + ui.PhoneNumber) //XXX
-
 	return &ui
 }
 
