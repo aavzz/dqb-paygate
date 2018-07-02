@@ -38,6 +38,9 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
   			rcpt.PhoneNumber = ui.PhoneNumber
 		}
 	}
+	if rcpt.Email == "" {
+		rcpt.Email = "nonexistent@nowhere.net"
+	}
 	rcptLines.Price = sum
       	rcptLines.Quantity = 1
       	rcptLines.Title = "Услуги по договору " + cid 
