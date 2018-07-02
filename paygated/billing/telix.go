@@ -92,11 +92,11 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
 				log.Error("Empty email: " + cid);
 			}
         	} else {
-			ui.Email = ui.Email + ",+" + i
+			ui.Email = ui.Email + "," + i
 		}
 	}
 
-       	reg, err := regexp.Compile(`,+$`)
+       	reg, err := regexp.Compile(`^,`)
        	if err != nil {
        	        log.Error("Telix: " + err.Error())
 		return nil
