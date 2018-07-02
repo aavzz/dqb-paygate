@@ -7,6 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
 	"regexp"
+	"strings"
 )
 
 type telix struct {
@@ -44,7 +45,8 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
 	}
 	var ui UserInfo
 	var subj uint8
-        if err := rows.Scan(&ui.PhoneNumber, &ui.Email, &subj); err != nil {
+	var email, phone string
+        if err := rows.Scan(&phone, &email, &subj); err != nil {
 	    log.Error("Telix: " + err.Error() + ": " + cid)
             return nil
         }
@@ -56,31 +58,58 @@ func (b *telix) GetUserInfo(cid string) *UserInfo {
 		ui.Type="ul"
 	}
 
-	//Normalize phone number (remove all non-digits)
-        reg, err := regexp.Compile(`[^\d]`)
-        if err != nil {
-                log.Error("Telix: " + err.Error())
+	arr := strings.Split(phone, ",")
+	for i := range arr {
+
+		//Normalize phone number (remove all non-digits)
+        	reg, err := regexp.Compile(`[^\d]`)
+        	if err != nil {
+        	        log.Error("Telix: " + err.Error())
+			return nil
+        	}
+        	i = reg.ReplaceAllString(i, "")
+
+		if m, _ := regexp.MatchString(`^7\d\d\d\d\d\d\d\d\d\d$`, i); !m {
+			if i != "" {
+				log.Error("Junk phone number: " + i + "(" + cid + ")");
+				i = "";
+			} else {
+				log.Error("Empty phone number: " + cid);
+			}
+        	} else {
+			ui.PhoneNumber = ui.PhoneNumber + ",+" + i
+		}
+
+	}
+       	reg, err := regexp.Compile(`,+$`)
+       	if err != nil {
+       	        log.Error("Telix: " + err.Error())
 		return nil
-        }
-        ui.PhoneNumber = reg.ReplaceAllString(ui.PhoneNumber, "")
+       	}
+       	ui.PhoneNumber = reg.ReplaceAllString(ui.PhoneNumber, "")
 
-	if m, _ := regexp.MatchString(`^7\d\d\d\d\d\d\d\d\d\d$`, ui.PhoneNumber); !m {
-		if ui.PhoneNumber != "" {
-			log.Error("Junk phone number: " + ui.PhoneNumber + "(" + cid + ")");
-			ui.PhoneNumber = "";
-		} else {
-			log.Error("Empty phone number: " + cid);
-		}
-        }
 
-	if m, _ := regexp.MatchString(`^.+@.+\..+$`, ui.Email); !m {
-		if ui.Email != "" {
-			log.Error("Junk email: " + ui.Email + "(" + cid + ")");
-			ui.Email = "";
-		} else {
-			log.Error("Empty email: " + cid);
+	arr := strings.Split(email, ",")
+	for i := range arr {
+		if m, _ := regexp.MatchString(`^.+@.+\..+$`, i); !m {
+			if i != "" {
+				log.Error("Junk email: " + i + "(" + cid + ")");
+				ui.Email = "";
+			} else {
+				log.Error("Empty email: " + cid);
+			}
+        	} else {
+			ui.Email = ui.Email + ",+" + i
 		}
-        }
+	}
+       	reg, err := regexp.Compile(`,+$`)
+       	if err != nil {
+       	        log.Error("Telix: " + err.Error())
+		return nil
+       	}
+       	ui.Email = reg.ReplaceAllString(ui.Email, "")
+
+	log.Info("UserData: " + ui.Email + " " + ui.PhoneNumber) //XXX
 
 	return &ui
 }
