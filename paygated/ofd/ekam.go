@@ -40,7 +40,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 	}
 	rcptLines.Price = sum
       	rcptLines.Quantity = 1
-      	rcptLines.Title = "Услуги"
+      	rcptLines.Title = "Услуги по договору " + cid 
       	rcptLines.TotalPrice = sum
 	if vat != "" {
 		vatNum, err := strconv.ParseInt(vat, 10, 64)
