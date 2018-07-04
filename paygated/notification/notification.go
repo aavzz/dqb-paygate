@@ -83,6 +83,7 @@ func InitNotification() {
 						template = nn.emailTemplate
 					}
 					if addr == "" || channel == "" {
+               	         			storage.Storage.SetHandledNotification(k, "")
 						continue
 					}
 					message := template
