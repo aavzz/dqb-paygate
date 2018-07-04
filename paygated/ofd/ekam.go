@@ -9,6 +9,7 @@ import (
 	"bytes"
 	"io/ioutil"
 	"github.com/aavzz/daemon/log"
+	"github.com/aavzz/dqb-paygate/paygated/billing"
 	"github.com/spf13/viper"
 	"strconv"
 	"fmt"
@@ -25,15 +26,16 @@ func (e *ekam) init() {
 }
 
 //RegisterReceipt sends receipt info to ekam
-func (e *ekam) RegisterReceipt(pid, cid, t, vat, phone, email string, sum float32) error {
+func (e *ekam) RegisterReceipt(pid, cid, t, vat string, sum float32) error {
 
 	var rcptLines ReceiptLines
 	var rcpt ReceiptRequest
 
+	ui := billing.Billing.GetUserInfo(cid)
 	if viper.GetString("notification.url") == "" && ui != nil {
-		rcpt.Email = email
+		rcpt.Email = ui.Email
 		if rcpt.Email == "" {
-  			rcpt.PhoneNumber = phone
+  			rcpt.PhoneNumber = ui.PhoneNumber
 		}
 	}
 	if rcpt.Email == "" {
@@ -53,7 +55,7 @@ func (e *ekam) RegisterReceipt(pid, cid, t, vat, phone, email string, sum float3
 	}
 
   	rcpt.OrderId = pid
-  	rcpt.OrderNumber = "1"
+  	rcpt.OrderNumber = pid
   	rcpt.Type = t
   	rcpt.ShouldPrint = false
   	rcpt.CashAmount = 0

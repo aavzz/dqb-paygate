@@ -3,14 +3,13 @@ package ofd
 import (
 	"github.com/aavzz/daemon/log"
 	"github.com/aavzz/dqb-paygate/paygated/storage"
-	"github.com/aavzz/dqb-paygate/paygated/billing"
         "time"
 	"github.com/spf13/viper"
 )
 
 type ofd interface {
         init()
-	RegisterReceipt(pid, cid, t, vat, phone, email string, sum float32) error
+	RegisterReceipt(pid, cid, t, vat string, sum float32) error
 	ReceiptInfo(pid string) *ResponseOk
 }
 
@@ -37,53 +36,33 @@ func InitOfd() {
                 log.Fatal("ofd.token cannot be empty")
         }
 
+
 	Ofd.init()
 
-	//Store a new receipt locally
        	go func() {
-		for {
-			time.Sleep(10 * time.Second)
+         		for {
+            		    time.Sleep(10 * time.Second)
 
-			s := storage.Storage.GetUnhandledOfd()
-			if s != nil {
-				for k, v := range s {
-       			               	r := storage.Storage.StoreReceipt(v.id)
-				}
-               		}
-       		}
-       	}()
-
-	//Register pending receipt with OFD or update its status
-       	go func() {
-		for {
-			time.Sleep(10 * time.Second)
-
-			s := storage.Storage.GetPendingReceipts()
-			if s != nil {
-				for k, v := range s {
- 	                      		ri := Ofd.ReceiptInfo(v.Uuid)
- 	                      		if ri == nil {
-						ui := billing.Billing.GetUserInfo(cid)
- 	                      			err := Ofd.RegisterReceipt(v.Uuid, v.Cid, v.Type, v.Vat, ui.PhoneNumber, ui.Email, v.Sum)
- 	                      			if err == nil {
-						}
-					} else {
-						switch ri.Status {
-						case "printed":
-       			               			storage.Storage.ReceiptPrinted(v.Id)
-       			              			// delete? XXX storage.Storage.SetHandledOfd(k)
-							if viper.GetString("notification.url") == "" {
-       	                         				storage.Storage.SetHandledNotification(k, "ofd")
-							}
-						case "error":
-       			               			storage.Storage.ReceiptError(v.Id)
-						}
+ 		               s := storage.Storage.GetUnhandledOfd()
+ 		               if s != nil {
+ 		               	for k, v := range s {
+					switch v.Type {
+					case "in": 
+						v.Type = "sale"
+					case "out":
+						v.Type = "return"
 					}
+ 		                      	 err := Ofd.RegisterReceipt(v.PaymentId, v.Cid, v.Type, v.Vat, v.Sum)
+ 		                      	 if err == nil {
+ 	      	                	         storage.Storage.SetHandledOfd(k)
+						if viper.GetString("notification.url") == "" {
+ 	      	                	         storage.Storage.SetHandledNotification(k, "ofd")
+						}
+ 	      	                	 }
 				}
-			}
-		}
-	}
-
+                		}
+       	     		}
+       	}()
 
 }
 
