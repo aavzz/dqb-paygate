@@ -54,7 +54,7 @@ func InitOfd() {
 				case "out":
 					v.Type = "return"
 				}
-				r := Ofs.ReceiptInfo(v.paymentId)
+				r := Ofs.ReceiptInfo(v.PaymentId)
 				if r == nil {
 					Ofd.RegisterReceipt(v.PaymentId, v.Cid, v.Type, v.Vat, v.Sum)
 				} else {
