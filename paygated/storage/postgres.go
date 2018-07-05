@@ -157,7 +157,7 @@ func (s *postgres) GetUnhandledOfd() map[uint64]Unhandled {
 //GetUnhandledNotifier gets unprocessed db records
 func (s *postgres) GetUnhandledNotification() map[uint64]Unhandled {
 	m := make(map[uint64]Unhandled)
-	rows,err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, payment_id, payment_channel, payment_direction, payment_vat FROM payments WHERE tstamp_notification is null")
+	rows,err := s.dbh.Query("SELECT id, payment_subject_id, payment_sum, payment_id, payment_channel, payment_direction, payment_vat FROM payments WHERE tstamp_notification is null AND tstamp_ofd is not null")
         if err != nil {
 		log.Error("Postgres: " + err.Error())
             return nil
