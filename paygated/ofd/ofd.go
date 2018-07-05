@@ -40,11 +40,13 @@ func InitOfd() {
 	Ofd.init()
 
        	go func() {
-         		for {
-            		    time.Sleep(10 * time.Second)
+		for {
+			time.Sleep(10 * time.Second)
 
- 		               s := storage.Storage.GetUnhandledOfd()
- 		               if s != nil {
+				s := storage.Storage.GetUnhandledOfd()
+				if s == nil {
+					continue
+				}
  		               	for k, v := range s {
 					switch v.Type {
 					case "in": 
@@ -52,17 +54,25 @@ func InitOfd() {
 					case "out":
 						v.Type = "return"
 					}
- 		                      	 err := Ofd.RegisterReceipt(v.PaymentId, v.Cid, v.Type, v.Vat, v.Sum)
- 		                      	 if err == nil {
- 	      	                	         storage.Storage.SetHandledOfd(k)
-						if viper.GetString("notification.url") == "" {
- 	      	                	         storage.Storage.SetHandledNotification(k, "ofd")
+					r := Ofs.ReceiptInfo(v.paymentId)
+					if r == nil {
+						Ofd.RegisterReceipt(v.PaymentId, v.Cid, v.Type, v.Vat, v.Sum)
+					} else {
+						switch r.Status {
+						case "pending":
+							continue
+						case "printed":
+							storage.Storage.SetHandledOfd(k)
+							if viper.GetString("notification.url") == "" {
+								storage.Storage.SetHandledNotification(k, "ofd")
+							}
+						case "error":
+							Ofd.RegisterReceipt(v.PaymentId, v.Cid, v.Type, v.Vat, v.Sum)
 						}
- 	      	                	 }
-				}
-                		}
-       	     		}
+					}
+       	                	}
+			}
+       		}
        	}()
-
 }
 
