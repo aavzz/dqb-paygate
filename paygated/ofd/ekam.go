@@ -184,11 +184,12 @@ func (e *ekam) ReceiptInfo(pid string) *ResponseOk {
                         if viper.GetString("ofd.verbose") == "true" {
                                 log.Info("200:" + fmt.Sprintf("%d", len(v.Items)) + string(jsonValue))
                         }         
-			if len(v.Items) > 0 {
-	                        return &v.Items[0]
-			} else {
-				return nil
+			for _, val := range v.Items {
+				if val.Status == "printed" {
+					return &val
+				}
 			}
+			return nil
                 case 422:                  
                         body, err := ioutil.ReadAll(resp.Body)
                         if err != nil {
