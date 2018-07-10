@@ -1,2 +1,2 @@
 # dqb-paygate
-Payment pateway for DQ billing
+Payment gateway for DQ billing
